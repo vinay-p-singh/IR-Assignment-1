@@ -1,0 +1,731 @@
+{
+  "corpus": {
+    "num_docs": 2225,
+    "raw_bytes": 5041385,
+    "total_whitespace_tokens": 854490,
+    "unique_whitespace_types": 65553,
+    "doc_length": {
+      "min": 89,
+      "median": 332,
+      "max": 4432,
+      "mean": 384.04
+    }
+  },
+  "categories": {
+    "business": 510,
+    "entertainment": 386,
+    "politics": 417,
+    "sport": 511,
+    "tech": 401
+  },
+  "indexes": [
+    {
+      "index": "raw",
+      "num_docs": 2225,
+      "vocabulary_size": 38266,
+      "total_postings": 474642,
+      "total_tokens": 854987,
+      "hapax_legomena": 14699,
+      "mean_df": 12.404
+    },
+    {
+      "index": "normalized",
+      "num_docs": 2225,
+      "vocabulary_size": 33981,
+      "total_postings": 457500,
+      "total_tokens": 854987,
+      "hapax_legomena": 12703,
+      "mean_df": 13.463
+    },
+    {
+      "index": "nostop",
+      "num_docs": 2225,
+      "vocabulary_size": 33805,
+      "total_postings": 356386,
+      "total_tokens": 497333,
+      "hapax_legomena": 12697,
+      "mean_df": 10.542
+    },
+    {
+      "index": "stemmed",
+      "num_docs": 2225,
+      "vocabulary_size": 25049,
+      "total_postings": 335223,
+      "total_tokens": 497333,
+      "hapax_legomena": 9505,
+      "mean_df": 13.383
+    },
+    {
+      "index": "lemmatized",
+      "num_docs": 2225,
+      "vocabulary_size": 30821,
+      "total_postings": 346890,
+      "total_tokens": 497333,
+      "hapax_legomena": 11687,
+      "mean_df": 11.255
+    }
+  ],
+  "evaluation": {
+    "raw": {
+      "num_queries": 30,
+      "macro": {
+        "precision": 0.8663,
+        "recall": 0.6436,
+        "f1": 0.7032
+      },
+      "micro": {
+        "precision": 0.9993,
+        "recall": 0.5886,
+        "f1": 0.7409
+      }
+    },
+    "normalized": {
+      "num_queries": 30,
+      "macro": {
+        "precision": 1.0,
+        "recall": 0.8686,
+        "f1": 0.9044
+      },
+      "micro": {
+        "precision": 1.0,
+        "recall": 0.7171,
+        "f1": 0.8352
+      }
+    },
+    "nostop": {
+      "num_queries": 30,
+      "macro": {
+        "precision": 1.0,
+        "recall": 0.8686,
+        "f1": 0.9044
+      },
+      "micro": {
+        "precision": 1.0,
+        "recall": 0.7171,
+        "f1": 0.8352
+      }
+    },
+    "stemmed": {
+      "num_queries": 30,
+      "macro": {
+        "precision": 0.906,
+        "recall": 0.9564,
+        "f1": 0.9197
+      },
+      "micro": {
+        "precision": 0.9385,
+        "recall": 0.8957,
+        "f1": 0.9166
+      }
+    },
+    "lemmatized": {
+      "num_queries": 30,
+      "macro": {
+        "precision": 0.9204,
+        "recall": 0.8764,
+        "f1": 0.865
+      },
+      "micro": {
+        "precision": 0.9414,
+        "recall": 0.7423,
+        "f1": 0.8301
+      }
+    }
+  },
+  "tolerant": {
+    "exact": {
+      "num_queries": 20,
+      "macro": {
+        "precision": 0.1937,
+        "recall": 0.1326,
+        "f1": 0.1466
+      },
+      "micro": {
+        "precision": 0.9838,
+        "recall": 0.2249,
+        "f1": 0.3662
+      }
+    },
+    "tolerant": {
+      "num_queries": 20,
+      "macro": {
+        "precision": 0.8008,
+        "recall": 0.8543,
+        "f1": 0.8237
+      },
+      "micro": {
+        "precision": 0.9194,
+        "recall": 0.8905,
+        "f1": 0.9047
+      }
+    }
+  },
+  "comparisons": {
+    "naive_total": 77943,
+    "optimized_total": 21790,
+    "saving_pct": 72.04
+  },
+  "sample_postings": {
+    "oil": [
+      2,
+      8,
+      11,
+      15,
+      21,
+      23,
+      24,
+      27,
+      29,
+      44,
+      45,
+      49,
+      56,
+      76,
+      79
+    ],
+    "elect": [
+      6,
+      34,
+      75,
+      101,
+      105,
+      106,
+      120,
+      135,
+      153,
+      164,
+      165,
+      196,
+      198,
+      213,
+      239
+    ],
+    "broadband": [
+      0,
+      111,
+      123,
+      251,
+      1004,
+      1828,
+      1834,
+      1841,
+      1844,
+      1846,
+      1855,
+      1870,
+      1881,
+      1893,
+      1896
+    ],
+    "chelsea": [
+      39,
+      1078,
+      1141,
+      1409,
+      1413,
+      1414,
+      1416,
+      1422,
+      1423,
+      1424,
+      1426,
+      1430,
+      1433,
+      1435,
+      1437
+    ],
+    "technolog": [
+      233,
+      544,
+      657,
+      1111,
+      1832,
+      1922,
+      1926,
+      1933,
+      1960,
+      2023,
+      2069,
+      2100,
+      2189,
+      2193,
+      2202
+    ]
+  },
+  "top_terms": [
+    [
+      "said",
+      7255
+    ],
+    [
+      "us",
+      3478
+    ],
+    [
+      "mr",
+      3046
+    ],
+    [
+      "year",
+      2610
+    ],
+    [
+      "would",
+      2577
+    ],
+    [
+      "new",
+      2488
+    ],
+    [
+      "also",
+      2156
+    ],
+    [
+      "peopl",
+      1971
+    ],
+    [
+      "on",
+      1816
+    ],
+    [
+      "game",
+      1615
+    ],
+    [
+      "sai",
+      1588
+    ],
+    [
+      "could",
+      1510
+    ],
+    [
+      "time",
+      1487
+    ],
+    [
+      "last",
+      1404
+    ],
+    [
+      "make",
+      1375
+    ]
+  ],
+  "wildcards": [
+    {
+      "pattern": "re*val",
+      "matches": 3,
+      "sample": "removal retrieval revival"
+    },
+    {
+      "pattern": "comput*",
+      "matches": 13,
+      "sample": "computational computer computer's computer-augmented computer-based computer-controlled computer-generated computer-implemented computeractive computerandvideogames computerised computers"
+    },
+    {
+      "pattern": "*ology",
+      "matches": 15,
+      "sample": "apology bio-technology biology chronology ecology futurology ideology methodology musicology mythology nano-technology nanotechnology"
+    },
+    {
+      "pattern": "invest*",
+      "matches": 18,
+      "sample": "invest investec invested investigate investigated investigates investigating investigation investigations investigative investigators investing"
+    },
+    {
+      "pattern": "gov*ment",
+      "matches": 1,
+      "sample": "government"
+    },
+    {
+      "pattern": "f*ball",
+      "matches": 1,
+      "sample": "football"
+    }
+  ],
+  "porter_traces": {
+    "relational": [
+      [
+        "input",
+        "relational"
+      ],
+      [
+        "1a",
+        "relational"
+      ],
+      [
+        "1b",
+        "relational"
+      ],
+      [
+        "1c",
+        "relational"
+      ],
+      [
+        "2",
+        "relate"
+      ],
+      [
+        "3",
+        "relate"
+      ],
+      [
+        "4",
+        "relate"
+      ],
+      [
+        "5a",
+        "relat"
+      ],
+      [
+        "5b",
+        "relat"
+      ]
+    ],
+    "conditional": [
+      [
+        "input",
+        "conditional"
+      ],
+      [
+        "1a",
+        "conditional"
+      ],
+      [
+        "1b",
+        "conditional"
+      ],
+      [
+        "1c",
+        "conditional"
+      ],
+      [
+        "2",
+        "condition"
+      ],
+      [
+        "3",
+        "condition"
+      ],
+      [
+        "4",
+        "condit"
+      ],
+      [
+        "5a",
+        "condit"
+      ],
+      [
+        "5b",
+        "condit"
+      ]
+    ],
+    "investments": [
+      [
+        "input",
+        "investments"
+      ],
+      [
+        "1a",
+        "investment"
+      ],
+      [
+        "1b",
+        "investment"
+      ],
+      [
+        "1c",
+        "investment"
+      ],
+      [
+        "2",
+        "investment"
+      ],
+      [
+        "3",
+        "investment"
+      ],
+      [
+        "4",
+        "invest"
+      ],
+      [
+        "5a",
+        "invest"
+      ],
+      [
+        "5b",
+        "invest"
+      ]
+    ],
+    "managing": [
+      [
+        "input",
+        "managing"
+      ],
+      [
+        "1a",
+        "managing"
+      ],
+      [
+        "1b",
+        "manag"
+      ],
+      [
+        "1c",
+        "manag"
+      ],
+      [
+        "2",
+        "manag"
+      ],
+      [
+        "3",
+        "manag"
+      ],
+      [
+        "4",
+        "manag"
+      ],
+      [
+        "5a",
+        "manag"
+      ],
+      [
+        "5b",
+        "manag"
+      ]
+    ],
+    "technologies": [
+      [
+        "input",
+        "technologies"
+      ],
+      [
+        "1a",
+        "technologi"
+      ],
+      [
+        "1b",
+        "technologi"
+      ],
+      [
+        "1c",
+        "technologi"
+      ],
+      [
+        "2",
+        "technologi"
+      ],
+      [
+        "3",
+        "technologi"
+      ],
+      [
+        "4",
+        "technologi"
+      ],
+      [
+        "5a",
+        "technologi"
+      ],
+      [
+        "5b",
+        "technologi"
+      ]
+    ],
+    "announced": [
+      [
+        "input",
+        "announced"
+      ],
+      [
+        "1a",
+        "announced"
+      ],
+      [
+        "1b",
+        "announc"
+      ],
+      [
+        "1c",
+        "announc"
+      ],
+      [
+        "2",
+        "announc"
+      ],
+      [
+        "3",
+        "announc"
+      ],
+      [
+        "4",
+        "announc"
+      ],
+      [
+        "5a",
+        "announc"
+      ],
+      [
+        "5b",
+        "announc"
+      ]
+    ],
+    "winning": [
+      [
+        "input",
+        "winning"
+      ],
+      [
+        "1a",
+        "winning"
+      ],
+      [
+        "1b",
+        "win"
+      ],
+      [
+        "1c",
+        "win"
+      ],
+      [
+        "2",
+        "win"
+      ],
+      [
+        "3",
+        "win"
+      ],
+      [
+        "4",
+        "win"
+      ],
+      [
+        "5a",
+        "win"
+      ],
+      [
+        "5b",
+        "win"
+      ]
+    ],
+    "universities": [
+      [
+        "input",
+        "universities"
+      ],
+      [
+        "1a",
+        "universiti"
+      ],
+      [
+        "1b",
+        "universiti"
+      ],
+      [
+        "1c",
+        "universiti"
+      ],
+      [
+        "2",
+        "universiti"
+      ],
+      [
+        "3",
+        "universiti"
+      ],
+      [
+        "4",
+        "univers"
+      ],
+      [
+        "5a",
+        "univers"
+      ],
+      [
+        "5b",
+        "univers"
+      ]
+    ],
+    "agreed": [
+      [
+        "input",
+        "agreed"
+      ],
+      [
+        "1a",
+        "agreed"
+      ],
+      [
+        "1b",
+        "agree"
+      ],
+      [
+        "1c",
+        "agree"
+      ],
+      [
+        "2",
+        "agree"
+      ],
+      [
+        "3",
+        "agree"
+      ],
+      [
+        "4",
+        "agree"
+      ],
+      [
+        "5a",
+        "agre"
+      ],
+      [
+        "5b",
+        "agre"
+      ]
+    ],
+    "feed": [
+      [
+        "input",
+        "feed"
+      ],
+      [
+        "1a",
+        "feed"
+      ],
+      [
+        "1b",
+        "feed"
+      ],
+      [
+        "1c",
+        "feed"
+      ],
+      [
+        "2",
+        "feed"
+      ],
+      [
+        "3",
+        "feed"
+      ],
+      [
+        "4",
+        "feed"
+      ],
+      [
+        "5a",
+        "feed"
+      ],
+      [
+        "5b",
+        "feed"
+      ]
+    ]
+  }
+}

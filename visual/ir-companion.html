@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boolean IR Companion — BBC News corpus</title>
+<script>
+  (() => {
+    const param = new URLSearchParams(window.location.search).get("scoutTheme");
+    const theme =
+      param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
+<style>
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+  --cp-card-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.14);
+  --cp-grid-off: rgba(0, 0, 0, 0.07);
+  --cp-focus-ring: rgba(177, 31, 75, 0.45);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+  --cp-card-shadow: 0 0 2px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.5);
+  --cp-grid-off: rgba(255, 255, 255, 0.08);
+  --cp-focus-ring: rgba(253, 142, 161, 0.5);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cp-bg);
+  color: var(--cp-text);
+  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+code, .mono, pre { font-family: Consolas, "Courier New", Courier, monospace; }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 24px 20px 72px; }
+
+header.masthead {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 20px;
+}
+header.masthead h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+header.masthead p { margin: 0; color: var(--cp-text-muted); max-width: 62ch; }
+
+button, select {
+  font-family: inherit; font-size: 0.9rem; color: var(--cp-text);
+  background: var(--cp-surface); border: 1px solid var(--cp-border);
+  border-radius: 0.625rem; padding: 7px 13px; cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+button:hover, select:hover { border-color: var(--cp-border-strong); }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--cp-focus-ring); outline-offset: 2px; }
+
+button.primary {
+  background: var(--cp-accent); color: var(--cp-accent-fg); border-color: var(--cp-accent);
+  font-weight: 600;
+}
+button.primary:hover:not(:disabled) { background: var(--cp-accent-hover); border-color: var(--cp-accent-hover); }
+
+/* ---------------------------------------------------------------- tabs */
+[role="tablist"] {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  border-bottom: 1px solid var(--cp-border); margin-bottom: 22px;
+}
+[role="tab"] {
+  border: 1px solid transparent; border-bottom: none; background: transparent;
+  border-radius: 0.625rem 0.625rem 0 0; padding: 9px 15px; margin-bottom: -1px;
+  color: var(--cp-text-muted); font-weight: 500;
+}
+[role="tab"]:hover { color: var(--cp-text); background: var(--cp-surface-soft); }
+[role="tab"][aria-selected="true"] {
+  background: var(--cp-surface); border-color: var(--cp-border);
+  color: var(--cp-accent); font-weight: 600;
+}
+[role="tab"] .idx {
+  display: inline-block; min-width: 1.35em; margin-right: 6px;
+  color: var(--cp-text-soft); font-variant-numeric: tabular-nums;
+}
+[role="tab"][aria-selected="true"] .idx { color: var(--cp-accent); }
+[role="tabpanel"][hidden] { display: none; }
+
+/* ---------------------------------------------------------------- cards */
+.card {
+  background: var(--cp-surface); border: 1px solid var(--cp-border);
+  border-radius: 16px; padding: 18px 20px; box-shadow: var(--cp-card-shadow);
+  margin-bottom: 18px;
+}
+.card > h2 { margin: 0 0 4px; font-size: 1.12rem; }
+.card > h3 { margin: 18px 0 6px; font-size: 0.98rem; }
+.card > .lede { margin: 0 0 14px; color: var(--cp-text-muted); max-width: 78ch; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 900px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+.stat {
+  background: var(--cp-surface-soft); border: 1px solid var(--cp-border);
+  border-radius: 0.625rem; padding: 11px 13px;
+}
+.stat .v { font-size: 1.35rem; font-weight: 650; font-variant-numeric: tabular-nums; display: block; }
+.stat .k { font-size: 0.78rem; color: var(--cp-text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.note {
+  border-left: 3px solid var(--cp-accent); background: var(--cp-accent-soft);
+  padding: 10px 14px; border-radius: 0 0.625rem 0.625rem 0; margin: 14px 0;
+  color: var(--cp-text); font-size: 0.9rem;
+}
+.muted { color: var(--cp-text-muted); }
+.small { font-size: 0.85rem; }
+.tiny { font-size: 0.78rem; }
+
+dl.defs { margin: 0; }
+dl.defs dt { font-weight: 650; margin-top: 12px; color: var(--cp-accent); }
+dl.defs dt:first-child { margin-top: 0; }
+dl.defs dd { margin: 3px 0 0; color: var(--cp-text-muted); }
+
+table.data { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+table.data th, table.data td {
+  border-bottom: 1px solid var(--cp-border); padding: 7px 9px; text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+table.data th:first-child, table.data td:first-child { text-align: left; font-variant-numeric: normal; }
+table.data th { color: var(--cp-text-muted); font-weight: 600; font-size: 0.79rem;
+  text-transform: uppercase; letter-spacing: 0.04em; }
+table.data tbody tr:hover { background: var(--cp-surface-soft); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+.chip {
+  border: 1px solid var(--cp-border); background: var(--cp-surface-soft);
+  border-radius: 999px; padding: 4px 11px; font-size: 0.85rem;
+}
+button.chip { cursor: pointer; }
+button.chip[aria-pressed="true"] {
+  background: var(--cp-accent); border-color: var(--cp-accent); color: var(--cp-accent-fg); font-weight: 600;
+}
+
+/* ---------------------------------------------------------------- svg */
+svg { display: block; max-width: 100%; height: auto; }
+.svg-node rect { fill: var(--cp-surface-soft); stroke: var(--cp-border-strong); stroke-width: 1; }
+.svg-node text { fill: var(--cp-text); font-size: 13px; font-weight: 600; }
+.svg-node .sub { fill: var(--cp-text-muted); font-size: 11px; font-weight: 400; }
+.svg-node { cursor: pointer; }
+.svg-node:hover rect { fill: var(--cp-highlight); }
+.svg-node:focus-visible rect { stroke: var(--cp-accent); stroke-width: 2; }
+.svg-node[aria-pressed="true"] rect { fill: var(--cp-accent); stroke: var(--cp-accent); }
+.svg-node[aria-pressed="true"] text { fill: var(--cp-accent-fg); }
+.svg-node[aria-pressed="true"] .sub { fill: var(--cp-accent-fg); }
+.flow-arrow { stroke: var(--cp-border-strong); stroke-width: 1.5; fill: none; }
+.arrow-head { fill: var(--cp-border-strong); }
+.bar { fill: var(--cp-accent); }
+.bar-alt { fill: var(--cp-border-strong); }
+.axis { stroke: var(--cp-border); stroke-width: 1; }
+.axis-text { fill: var(--cp-text-muted); font-size: 11px; }
+.axis-text.mono { font-family: Consolas, "Courier New", Courier, monospace; }
+.label-text { fill: var(--cp-text); font-size: 12px; }
+.pt { fill: var(--cp-accent); stroke: var(--cp-surface); stroke-width: 2; }
+.pt-ring { fill: none; stroke: var(--cp-accent); stroke-width: 1.5; }
+.gridline { stroke: var(--cp-border); stroke-width: 1; stroke-dasharray: 3 3; }
+
+/* ---------------------------------------------------------------- doc grid */
+#docGrid {
+  display: grid; grid-template-columns: repeat(55, 1fr); gap: 2px;
+  margin-top: 10px; max-width: 720px;
+}
+#docGrid i {
+  display: block; aspect-ratio: 1; border-radius: 1px; background: var(--cp-grid-off);
+}
+#docGrid i.on { background: var(--cp-accent); }
+#docGrid i.cat { background: var(--cp-border-strong); }
+
+/* ---------------------------------------------------------------- merge */
+.merge-lane { margin: 12px 0; }
+.merge-lane .lane-head {
+  display: flex; align-items: baseline; gap: 10px; margin-bottom: 5px;
+  font-size: 0.86rem; color: var(--cp-text-muted);
+}
+.merge-lane .lane-head b { color: var(--cp-text); font-size: 0.95rem; }
+.cells { display: flex; flex-wrap: wrap; gap: 5px; }
+.cell {
+  min-width: 46px; text-align: center; padding: 6px 7px; border-radius: 0.625rem;
+  border: 1px solid var(--cp-border); background: var(--cp-surface-soft);
+  font-family: Consolas, "Courier New", Courier, monospace; font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+}
+.cell.done { opacity: 0.38; }
+.cell.ptr { border-color: var(--cp-accent); border-width: 2px; background: var(--cp-highlight); font-weight: 700; }
+.cell.hit { background: var(--cp-accent); border-color: var(--cp-accent); color: var(--cp-accent-fg); font-weight: 700; }
+.cell.out { background: var(--cp-accent-soft); border-color: var(--cp-accent); }
+.cell.empty { color: var(--cp-text-soft); font-style: italic; border-style: dashed; }
+.explain {
+  min-height: 3.2em; background: var(--cp-surface-soft); border: 1px solid var(--cp-border);
+  border-radius: 0.625rem; padding: 10px 13px; margin-top: 12px; font-size: 0.9rem;
+}
+.explain b { color: var(--cp-accent); }
+.counters { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 12px; }
+.counters div { font-size: 0.85rem; color: var(--cp-text-muted); }
+.counters div span { display: block; font-size: 1.25rem; font-weight: 650; color: var(--cp-text);
+  font-variant-numeric: tabular-nums; }
+
+/* ---------------------------------------------------------------- porter */
+.trace-row {
+  display: grid; grid-template-columns: 62px 190px 1fr; gap: 12px; align-items: center;
+  padding: 7px 10px; border-bottom: 1px solid var(--cp-border); font-size: 0.88rem;
+}
+.trace-row:last-child { border-bottom: none; }
+.trace-row .step { font-weight: 700; color: var(--cp-text-muted); font-family: Consolas, "Courier New", Courier, monospace; }
+.trace-row .val { font-family: Consolas, "Courier New", Courier, monospace; font-size: 0.95rem; }
+.trace-row.changed { background: var(--cp-accent-soft); }
+.trace-row.changed .step { color: var(--cp-accent); }
+.trace-row.changed .val { font-weight: 700; color: var(--cp-accent); }
+.trace-row .rule { color: var(--cp-text-muted); font-size: 0.83rem; }
+
+/* ---------------------------------------------------------------- dp grid */
+table.dp { border-collapse: collapse; font-family: Consolas, "Courier New", Courier, monospace; }
+table.dp th, table.dp td {
+  width: 40px; height: 36px; text-align: center; border: 1px solid var(--cp-border);
+  font-size: 0.9rem; font-variant-numeric: tabular-nums;
+}
+table.dp th { background: var(--cp-surface-soft); color: var(--cp-text-muted); font-weight: 700; }
+table.dp td { background: var(--cp-surface); cursor: pointer; }
+table.dp td:hover { background: var(--cp-highlight); }
+table.dp td.path { background: var(--cp-accent-soft); border-color: var(--cp-accent); font-weight: 700; color: var(--cp-accent); }
+table.dp td.sel { background: var(--cp-accent); color: var(--cp-accent-fg); font-weight: 700; }
+table.dp td.final { border-width: 2px; border-color: var(--cp-accent); }
+
+/* ---------------------------------------------------------------- failures */
+.fail { border: 1px solid var(--cp-border); border-radius: 16px; padding: 16px 18px;
+  background: var(--cp-surface-soft); margin-bottom: 14px; }
+.fail h3 { margin: 0 0 6px; font-size: 0.98rem; color: var(--cp-danger); }
+.fail p { margin: 0 0 8px; color: var(--cp-text-muted); font-size: 0.9rem; }
+.fail p:last-child { margin-bottom: 0; }
+.fail .mono { color: var(--cp-text); }
+.eq { display: inline-block; background: var(--cp-surface); border: 1px solid var(--cp-border);
+  border-radius: 0.625rem; padding: 3px 9px; margin: 3px 4px 3px 0;
+  font-family: Consolas, "Courier New", Courier, monospace; font-size: 0.86rem; }
+
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.82rem; color: var(--cp-text-muted); margin-top: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; border: 1px solid var(--cp-border); }
+.legend i.on { background: var(--cp-accent); border-color: var(--cp-accent); }
+.legend i.off { background: var(--cp-grid-off); }
+
+.scroll-x { overflow-x: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important; scroll-behavior: auto !important;
+  }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <div>
+    <h1>Boolean IR Companion</h1>
+    <p>Every number on this page was measured on your own build over the BBC News corpus:
+       2,225 articles, five categories, 854,490 whitespace tokens. Work through the five
+       sections in order; each one assumes the one before it.</p>
+  </div>
+  <button id="themeToggle" type="button" aria-label="Switch colour theme">Switch theme</button>
+</header>
+
+<div role="tablist" aria-label="Learning sections">
+  <button role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true"  tabindex="0"><span class="idx">1</span>Pipeline map</button>
+  <button role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1"><span class="idx">2</span>Beginner</button>
+  <button role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1"><span class="idx">3</span>Intermediate</button>
+  <button role="tab" id="tab-4" aria-controls="panel-4" aria-selected="false" tabindex="-1"><span class="idx">4</span>Advanced</button>
+  <button role="tab" id="tab-5" aria-controls="panel-5" aria-selected="false" tabindex="-1"><span class="idx">5</span>Expert</button>
+</div>
+
+<!-- =================================================== 1. PIPELINE MAP -->
+<section role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0">
+
+  <div class="card">
+    <h2>The corpus you indexed</h2>
+    <p class="lede">Before any of the machinery matters, know what went in.</p>
+    <div class="grid3">
+      <div class="stat"><span class="v">2,225</span><span class="k">Documents</span></div>
+      <div class="stat"><span class="v">854,490</span><span class="k">Whitespace tokens</span></div>
+      <div class="stat"><span class="v">65,553</span><span class="k">Whitespace types</span></div>
+      <div class="stat"><span class="v">332</span><span class="k">Median doc length</span></div>
+      <div class="stat"><span class="v">384.04</span><span class="k">Mean doc length</span></div>
+      <div class="stat"><span class="v">89 – 4,432</span><span class="k">Shortest – longest</span></div>
+    </div>
+    <h3>Category balance</h3>
+    <div id="catChart"></div>
+  </div>
+
+  <div class="card">
+    <h2>The chain</h2>
+    <p class="lede">Select a stage. Each one is a pure transformation: something goes in,
+       something else comes out, and your build recorded a number for it.</p>
+    <div class="scroll-x"><div id="pipeSvg"></div></div>
+    <div id="pipeDetail" aria-live="polite"></div>
+  </div>
+
+</section>
+
+<!-- =================================================== 2. BEGINNER -->
+<section role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0" hidden>
+
+  <div class="card">
+    <h2>Three words that carry everything</h2>
+    <dl class="defs">
+      <dt>Term</dt>
+      <dd>A string in the dictionary — the unit the index is keyed by. Not a word: a term is
+          whatever survived your preprocessing. In the stemmed index, <code>technology</code> and
+          <code>technologies</code> are both the single term <code>technologi</code>.</dd>
+      <dt>Posting</dt>
+      <dd>One entry saying "this term occurs in this document". A posting is just a document ID.
+          In <code>InvertedIndex</code> the postings for a term are held as a sorted list of ints —
+          sorted, because every merge algorithm downstream depends on it.</dd>
+      <dt>Document frequency (df)</dt>
+      <dd>How many documents a term appears in, which is exactly the length of its postings list.
+          Not the same as collection frequency (cf), which counts every occurrence. Both live in
+          <code>Vocabulary</code>; df drives retrieval, cf drives the frequency table below.</dd>
+    </dl>
+    <div class="note">
+      Across the stemmed index the mean df is <b>13.383</b> and <b>9,505</b> terms occur exactly
+      once (hapax legomena). Most of the dictionary is nearly useless for retrieval; a handful of
+      terms do almost all the work.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>A real postings list</h2>
+    <p class="lede">Pick a term. The grid below is all 2,225 documents in corpus order; the lit
+       cells are the documents in that term's postings list. The numbers beneath are the actual
+       postings recorded by your build.</p>
+    <div class="chips" id="termChips" role="group" aria-label="Choose a term"></div>
+    <div class="merge-lane" style="margin-top:14px">
+      <div class="lane-head"><b id="termName">—</b><span id="termMeta"></span></div>
+      <div class="cells" id="termCells"></div>
+    </div>
+    <div id="docGrid" role="img" aria-label="Document grid, lit cells are documents containing the selected term"></div>
+    <div class="legend">
+      <span><i class="on"></i> contains the term</span>
+      <span><i class="off"></i> does not</span>
+      <span class="tiny">Reading order: document 0 top-left, document 2,224 bottom-right.</span>
+    </div>
+    <div class="note" id="termNote"></div>
+  </div>
+
+  <div class="card">
+    <h2>The head of the distribution</h2>
+    <p class="lede">The fifteen most frequent terms in the stemmed index, by collection frequency
+       (total occurrences, not document count). This is <code>Vocabulary.most_frequent</code>.</p>
+    <div class="scroll-x"><div id="topTermsChart"></div></div>
+    <div class="note">
+      <code>said</code> alone accounts for 7,255 occurrences out of 497,333 tokens — roughly one
+      token in every 69, after stop-word removal has already stripped the obvious noise. Note the
+      stemmed forms: <code>peopl</code>, <code>sai</code>, <code>us</code>. The second entry,
+      <code>us</code>, is the collision discussed in section 5.
+    </div>
+  </div>
+
+</section>
+
+<!-- =================================================== 3. INTERMEDIATE -->
+<section role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0" hidden>
+
+  <div class="card">
+    <h2>The merge, one comparison at a time</h2>
+    <p class="lede">This is the heart of Boolean retrieval. Two sorted postings lists, two pointers,
+       one pass. Because both lists are sorted, you never need to look backwards, and you never need
+       to hold the whole collection in memory. Press <b>Step</b> — or focus the button and press
+       Enter or Space — to advance a single comparison.</p>
+
+    <div class="chips" role="group" aria-label="Choose an operation">
+      <span class="small muted">Operation</span>
+      <button class="chip" type="button" data-op="AND"    aria-pressed="true">AND (intersect)</button>
+      <button class="chip" type="button" data-op="OR"     aria-pressed="false">OR (union)</button>
+      <button class="chip" type="button" data-op="ANDNOT" aria-pressed="false">AND NOT (difference)</button>
+    </div>
+    <div class="chips" style="margin-top:10px" role="group" aria-label="Choose the pair of terms">
+      <span class="small muted">Terms</span>
+      <label class="tiny muted" for="mergeA">A</label>
+      <select id="mergeA"></select>
+      <label class="tiny muted" for="mergeB">B</label>
+      <select id="mergeB"></select>
+    </div>
+
+    <div class="merge-lane">
+      <div class="lane-head"><b id="laneAName">—</b><span id="laneAMeta"></span></div>
+      <div class="cells" id="laneA"></div>
+    </div>
+    <div class="merge-lane">
+      <div class="lane-head"><b id="laneBName">—</b><span id="laneBMeta"></span></div>
+      <div class="cells" id="laneB"></div>
+    </div>
+
+    <div class="explain" id="mergeExplain" aria-live="polite">
+      Ready. The pointers <code>i</code> and <code>j</code> both start at position 0.
+    </div>
+
+    <div class="merge-lane">
+      <div class="lane-head"><b>Output</b><span class="tiny">appended in sorted order, never re-sorted</span></div>
+      <div class="cells" id="laneOut"></div>
+    </div>
+
+    <div class="counters">
+      <div><span id="cmpCount">0</span>Comparisons</div>
+      <div><span id="outCount">0</span>Results so far</div>
+      <div><span id="posI">0</span>Pointer i</div>
+      <div><span id="posJ">0</span>Pointer j</div>
+    </div>
+
+    <div class="chips" style="margin-top:14px">
+      <button class="primary" type="button" id="stepBtn">Step</button>
+      <button type="button" id="runBtn">Run to end</button>
+      <button type="button" id="resetBtn">Reset</button>
+    </div>
+
+    <div class="note" id="mergeNote">
+      The three operators share one loop and differ only in what they do with each outcome.
+      <b>AND</b> emits only on equality. <b>OR</b> emits on every branch. <b>AND NOT</b> emits when
+      A is strictly smaller — that is, when a document is in A and cannot be in B. Note that
+      AND NOT never builds the complement of B, which would be a list of thousands of documents.
+    </div>
+    <p class="small muted" id="mergeProvenance"></p>
+  </div>
+
+  <div class="card">
+    <h2>Porter stemmer, step by step</h2>
+    <p class="lede">Stemming is what collapses 33,805 terms to 25,049. It is not a dictionary
+       lookup — it is five ordered groups of suffix rules, each firing at most once. The first rule
+       in a group whose pattern matches, and whose measure condition holds, wins. Pick a word to see
+       the trace your implementation recorded.</p>
+    <div class="chips" id="porterChips" role="group" aria-label="Choose a word to trace"></div>
+    <div style="margin-top:14px; border:1px solid var(--cp-border); border-radius:0.625rem; overflow:hidden">
+      <div id="porterTrace"></div>
+    </div>
+    <div class="note" id="porterNote"></div>
+    <p class="small muted">
+      <b>Measure</b> m is the count of vowel–consonant alternations in the stem. It is the algorithm's
+      only guard against over-stemming: a rule with condition <code>m &gt; 1</code> refuses to strip a
+      suffix off a short stem. It is also the source of the failures in section 5.
+    </p>
+  </div>
+
+</section>
+
+<!-- =================================================== 4. ADVANCED -->
+<section role="tabpanel" id="panel-4" aria-labelledby="tab-4" tabindex="0" hidden>
+
+  <div class="card">
+    <h2>Why ordering AND arguments by df pays</h2>
+    <p class="lede">An intersection can never be larger than its smallest input. So if you merge the
+       two shortest lists first, every subsequent merge starts from a small accumulator. Merge the
+       longest first and you carry a large intermediate result through the whole chain. The result
+       set is identical either way — only the work changes.</p>
+
+    <div class="grid3">
+      <div class="stat"><span class="v">77,943</span><span class="k">Naive comparisons</span></div>
+      <div class="stat"><span class="v">21,790</span><span class="k">Optimised comparisons</span></div>
+      <div class="stat"><span class="v">72.0%</span><span class="k">Saving</span></div>
+    </div>
+    <p class="small muted" style="margin-top:10px">
+      Measured across 150 query executions — 30 queries against each of the five index
+      configurations — by <code>execute()</code> in <code>boolean.py</code>, with both strategies
+      asserted to return identical result sets.
+    </p>
+
+    <h3>Reorder it yourself</h3>
+    <p class="small muted">Pick three terms from the stemmed index, then move them. The document
+       frequencies are real; the comparison figure is the arithmetic upper bound on the merge loop
+       (each pairwise merge compares at most <code>|a| + |b|</code> times, and the accumulator after
+       an intersection is at most <code>min(|a|, |b|)</code>). It is a bound, not a measurement.</p>
+    <div class="chips" id="orderPool" role="group" aria-label="Add a term to the query"></div>
+    <div class="merge-lane" style="margin-top:14px">
+      <div class="lane-head"><b>Your order</b><span class="tiny">left to right, as written</span></div>
+      <div class="chips" id="orderList"></div>
+    </div>
+    <div class="grid3" style="margin-top:14px">
+      <div class="stat"><span class="v" id="boundYours">—</span><span class="k">Bound, your order</span></div>
+      <div class="stat"><span class="v" id="boundBest">—</span><span class="k">Bound, df-ascending</span></div>
+      <div class="stat"><span class="v" id="boundSave">—</span><span class="k">Difference</span></div>
+    </div>
+    <div class="explain" id="orderExplain" aria-live="polite">Add two or three terms to begin.</div>
+    <div class="note">
+      A real measured pair from your run: <code>q23 minister AND NOT chelsea</code> on the stemmed
+      index cost <b>4,126</b> comparisons naively and <b>407</b> optimised — a saving of 3,719 on a
+      single two-term query. The AND NOT queries q21, q22 and q23 supply almost the whole 72%.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Wildcards as a set intersection</h2>
+    <p class="lede">A wildcard pattern cannot be looked up in the dictionary, so
+       <code>KGramIndex</code> converts it into terms that can. The pattern is padded with
+       <code>$</code> sentinels, split on <code>*</code>, and each literal run of length ≥ 3 yields
+       3-grams. Intersecting those k-gram postings gives candidates. Then — and this stage is not
+       optional — a regex removes the candidates that contain the right pieces in the wrong order.</p>
+
+    <div class="chips" id="wildChips" role="group" aria-label="Choose a wildcard pattern"></div>
+
+    <div class="grid2" style="margin-top:16px">
+      <div>
+        <h3>Stage 1 — k-grams extracted</h3>
+        <div class="chips" id="wildGrams"></div>
+        <p class="small muted" id="wildGramNote"></p>
+        <h3>Stage 2 — candidates after intersection</h3>
+        <div class="chips" id="wildCands"></div>
+      </div>
+      <div>
+        <h3>Stage 3 — regex filter</h3>
+        <p class="small muted">Pattern compiled as <code id="wildRegex">—</code></p>
+        <div class="chips" id="wildKept"></div>
+        <h3>Result over the full vocabulary</h3>
+        <div class="stat"><span class="v" id="wildCount">—</span><span class="k">Terms matched, measured</span></div>
+      </div>
+    </div>
+    <div class="note" id="wildNote"></div>
+    <p class="small muted">
+      Stages 1 to 3 run live against a 30-term slice of your vocabulary so you can watch the
+      filtering happen. The matched-terms figure and the term samples are the measured results over
+      the whole dictionary.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Edit distance as a grid</h2>
+    <p class="lede">Levenshtein distance is a dynamic program. Cell (i, j) is the cheapest way to
+       turn the first i characters of one string into the first j of the other, and it depends only
+       on its three neighbours. Select any cell to see the three candidates it minimised over.</p>
+    <div class="grid2">
+      <div class="scroll-x"><div id="dpGrid"></div></div>
+      <div>
+        <div class="explain" id="dpExplain" aria-live="polite">
+          Select a cell in the grid.
+        </div>
+        <div class="stat" style="margin-top:14px"><span class="v">2</span><span class="k">levenshtein("pirce", "price")</span></div>
+        <p class="small muted" style="margin-top:12px">
+          The highlighted path is one optimal alignment, traced back from the bottom-right corner.
+          <code>levenshtein()</code> in <code>tolerant.py</code> keeps only two rows, so it computes
+          this number without ever building the whole grid;
+          <code>levenshtein_matrix()</code> builds it in full for exactly this kind of display.
+        </p>
+        <div class="note">
+          The <code>cap</code> argument matters more than it looks. If every value in a row already
+          exceeds the cap, no later row can come back under it, so the function abandons early.
+          Without it you would pay full DP cost against tens of thousands of hopeless candidates.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- =================================================== 5. EXPERT -->
+<section role="tabpanel" id="panel-5" aria-labelledby="tab-5" tabindex="0" hidden>
+
+  <div class="card">
+    <h2>Five configurations, one trade-off</h2>
+    <p class="lede">Each preprocessing step trades precision for recall. The five configurations are
+       cumulative, and the plot shows where each lands. Nothing here is free.</p>
+    <div class="chips" role="group" aria-label="Averaging method">
+      <span class="small muted">Averaging</span>
+      <button class="chip" type="button" data-avg="macro" aria-pressed="true">Macro</button>
+      <button class="chip" type="button" data-avg="micro" aria-pressed="false">Micro</button>
+    </div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="scroll-x"><div id="prPlot"></div></div>
+      <div class="scroll-x">
+        <table class="data" id="evalTable">
+          <thead><tr><th>Configuration</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="note" id="prNote"></div>
+      </div>
+    </div>
+    <div class="note">
+      Read the shape, not just the winner. Lowercasing is nearly free: it takes macro precision from
+      0.866 to 1.000 <em>and</em> recall from 0.644 to 0.869, because case variation was pure noise.
+      Stop-word removal changes the scores by nothing at all — identical to normalised on all six
+      figures — because no evaluation query rests on a stop word. Stemming is the only step that
+      genuinely trades: precision falls from 1.000 to 0.906 while recall climbs to 0.956. Lemmatising
+      is the odd one out: it improves precision over stemming but its macro F1, 0.865, is the second
+      worst of the five.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Vocabulary collapse</h2>
+    <p class="lede">Each cumulative step shrinks the dictionary. The size of the drop tells you how
+       much variation that step was treating as noise.</p>
+    <div class="scroll-x"><div id="vocabChart"></div></div>
+    <div class="note">
+      Lowercasing removes 4,285 types — pure case variants. Stop-word removal removes only 176 more
+      types, but 101,114 postings and 357,654 tokens: stop words are few but everywhere. Stemming
+      removes 8,756 types, by far the largest structural collapse, and drops hapax legomena from
+      12,697 to 9,505. Lemmatising is far more conservative than stemming: 30,821 types against
+      25,049, which is why it recovers precision and loses recall.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Tolerant retrieval: a large gain, honestly priced</h2>
+    <p class="lede">Twenty misspelled queries, run exactly and then with k-gram shortlisting plus
+       edit-distance correction.</p>
+    <div class="grid2">
+      <div class="scroll-x"><div id="tolChart"></div></div>
+      <div>
+        <div class="grid2">
+          <div class="stat"><span class="v">0.133 &rarr; 0.854</span><span class="k">Macro recall</span></div>
+          <div class="stat"><span class="v">0.194 &rarr; 0.801</span><span class="k">Macro precision</span></div>
+          <div class="stat"><span class="v">0.147 &rarr; 0.824</span><span class="k">Macro F1</span></div>
+          <div class="stat"><span class="v">0.984 &rarr; 0.919</span><span class="k">Micro precision</span></div>
+        </div>
+        <div class="note">
+          Correction repairs 18 of the 20 misspellings and recall rises more than sixfold. The cost
+          is visible in micro precision, which falls from 0.984 to 0.919. Exact matching almost never
+          returned a wrong document because it usually returned nothing at all; correction returns
+          documents, and about one retrieved document in twelve is now wrong. Macro-averaging softens
+          this, because it weights a query returning three documents the same as one returning three
+          hundred.
+        </div>
+        <p class="small muted">
+          Repair runs against the <strong>unstemmed</strong> vocabulary and the result is stemmed
+          afterwards. Correcting against stemmed terms fails outright: <code>goverment</code> stems
+          to <code>gover</code>, which exists, so a stem-based corrector sees a valid term and never
+          reaches <code>government</code>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Known failures</h2>
+    <p class="lede">Four findings from your own run. None of these are bugs in the implementation;
+       all four are consequences of the algorithms behaving exactly as specified.</p>
+
+    <div class="fail">
+      <h3>1. The stemmer splits the <span class="mono">technology</span> family</h3>
+      <p>
+        <span class="eq">technology → technologi</span>
+        <span class="eq">technologies → technologi</span>
+        <span class="eq">technological → technolog</span>
+      </p>
+      <p>Step 1a rewrites <code>ies → i</code>, which puts <code>technology</code> and
+         <code>technologies</code> together on <code>technologi</code>. But
+         <code>technological</code> reaches step 2, where <code>ical → ic</code> and related rules
+         apply, and lands on <code>technolog</code>. Porter's 1980 algorithm has no rule bridging
+         <code>technologi</code> and <code>technolog</code>, because it works on suffixes in
+         isolation and never consults a dictionary of related forms.</p>
+      <p>The consequence is visible in your index: <code>technologi</code> has df 241 while
+         <code>technolog</code> is a separate posting list entirely. Query q26,
+         <code>technology</code>, retrieves only the first, so every document that says only
+         "technological" is lost. That is recall gone for no linguistic reason.</p>
+    </div>
+
+    <div class="fail">
+      <h3>2. <span class="mono">player</span> never reaches <span class="mono">play</span></h3>
+      <p>
+        <span class="eq">player → player</span>
+        <span class="eq">players → player</span>
+        <span class="eq">play → plai</span>
+        <span class="eq">playing → plai</span>
+        <span class="eq">played → plai</span>
+      </p>
+      <p>Step 4 has a rule stripping <code>-er</code>, but it is conditioned on
+         <code>m(stem) &gt; 1</code>. The stem here is <code>play</code>, whose measure is exactly 1,
+         so the rule declines to fire and <code>player</code> stays intact. Meanwhile
+         <code>play</code> itself is caught by step 1c, which rewrites a terminal <code>y</code> to
+         <code>i</code> when the stem contains a vowel, giving <code>plai</code>.</p>
+      <p>So the family splits three ways rather than two, and the two halves diverge in opposite
+         directions: <code>player</code> keeps its suffix while <code>play</code> gains a mutation.
+         Query q27 <code>players</code> resolves to <code>player</code>, df 376, and never sees any
+         document that talks only about playing. The measure guard is doing its job — it exists to
+         stop over-stemming short words — and the cost is this.</p>
+    </div>
+
+    <div class="fail">
+      <h3>3. Lowercasing merges the country <span class="mono">US</span> into the pronoun <span class="mono">us</span></h3>
+      <p>Normalisation lowercases unconditionally, so <code>US</code> and <code>us</code> become one
+         term. The obvious fix would be stop-word removal, but the NLTK English stop-word list does
+         not contain <code>us</code> — it has <code>we</code>, <code>our</code> and
+         <code>ours</code>, but not the objective form. So the term survives every stage of the
+         pipeline.</p>
+      <p>The result is the second row of the frequency table: <code>us</code> with 3,478
+         occurrences, sitting between <code>said</code> and <code>mr</code>. That single postings
+         list conflates every American business story with every sentence containing "told us" or
+         "for us". A query for the country cannot separate them, and neither can a query trying to
+         avoid it.</p>
+      <p>This is the classic argument for case-sensitive handling of acronyms, or for a
+         collection-specific stop list rather than an off-the-shelf one.</p>
+    </div>
+
+    <div class="fail">
+      <h3>4. Edit distance is frequency-blind, so 2 of 20 repairs go to the wrong word</h3>
+      <p>
+        <span class="eq">d(labuor, labor) = 1</span>
+        <span class="eq">d(labuor, labour) = 2</span>
+        <span class="eq">d(pirce, piece) = 1</span>
+        <span class="eq">d(pirce, price) = 2</span>
+      </p>
+      <p>Plain Levenshtein charges a transposition as two substitutions, so the intended repair sits
+         two edits away while an unrelated word sits one edit away and wins. Query m16 asks for
+         <code>labuor</code> and receives the American spelling <code>labor</code> rather than the
+         British <code>labour</code> the BBC corpus actually uses. Query m09 asks for
+         <code>pirce</code> and receives <code>piece</code> rather than <code>price</code>, turning a
+         finance query into a general-vocabulary one and scoring zero.</p>
+      <p>Distance alone cannot rank corrections, because it measures only the shape of the word and
+         knows nothing about how likely each candidate is. A working corrector needs a channel model
+         &mdash; how probable is <em>this particular</em> typo &mdash; multiplied by a prior over
+         words. Damerau&ndash;Levenshtein, which charges a transposition as a single edit, would fix
+         both of these cases specifically; the frequency-blindness would remain.</p>
+      <p class="small muted">The frequency floor in <code>nearest()</code> is a partial mitigation
+         only. It stops a hapax term winning a tie, but <code>labor</code> and <code>piece</code>
+         are both common enough to clear it.</p>
+    </div>
+  </div>
+
+</section>
+
+</div>
+
+<script>
+"use strict";
+
+/* ------------------------------------------------------------------ data
+   Every value below is transcribed from data/derived/summary.json and
+   data/derived/boolean_optimization.csv produced by this project's own run. */
+const IR = {
+  corpus: { num_docs: 2225, raw_bytes: 5041385, total_whitespace_tokens: 854490,
+            unique_whitespace_types: 65553,
+            doc_length: { min: 89, median: 332, max: 4432, mean: 384.04 } },
+  categories: { business: 510, entertainment: 386, politics: 417, sport: 511, tech: 401 },
+  indexes: [
+    { index: "raw",        vocabulary_size: 38266, total_postings: 474642, total_tokens: 854987, hapax_legomena: 14699, mean_df: 12.404 },
+    { index: "normalized", vocabulary_size: 33981, total_postings: 457500, total_tokens: 854987, hapax_legomena: 12703, mean_df: 13.463 },
+    { index: "nostop",     vocabulary_size: 33805, total_postings: 356386, total_tokens: 497333, hapax_legomena: 12697, mean_df: 10.542 },
+    { index: "stemmed",    vocabulary_size: 25049, total_postings: 335223, total_tokens: 497333, hapax_legomena: 9505,  mean_df: 13.383 },
+    { index: "lemmatized", vocabulary_size: 30821, total_postings: 346890, total_tokens: 497333, hapax_legomena: 11687, mean_df: 11.255 }
+  ],
+  evaluation: {
+    raw:        { macro: { precision: 0.8663, recall: 0.6436, f1: 0.7032 }, micro: { precision: 0.9993, recall: 0.5886, f1: 0.7409 } },
+    normalized: { macro: { precision: 1.0,    recall: 0.8686, f1: 0.9044 }, micro: { precision: 1.0,    recall: 0.7171, f1: 0.8352 } },
+    nostop:     { macro: { precision: 1.0,    recall: 0.8686, f1: 0.9044 }, micro: { precision: 1.0,    recall: 0.7171, f1: 0.8352 } },
+    stemmed:    { macro: { precision: 0.906,  recall: 0.9564, f1: 0.9197 }, micro: { precision: 0.9385, recall: 0.8957, f1: 0.9166 } },
+    lemmatized: { macro: { precision: 0.9204, recall: 0.8764, f1: 0.865  }, micro: { precision: 0.9414, recall: 0.7423, f1: 0.8301 } }
+  },
+  tolerant: {
+    exact:    { num_queries: 20, macro: { precision: 0.1937, recall: 0.1326, f1: 0.1466 }, micro: { precision: 0.9838, recall: 0.2249, f1: 0.3662 } },
+    tolerant: { num_queries: 20, macro: { precision: 0.8008, recall: 0.8543, f1: 0.8237 }, micro: { precision: 0.9194, recall: 0.8905, f1: 0.9047 } }
+  },
+  comparisons: { naive_total: 77943, optimized_total: 21790, saving_pct: 72.04 },
+  sample_postings: {
+    oil:        [2, 8, 11, 15, 21, 23, 24, 27, 29, 44, 45, 49, 56, 76, 79],
+    elect:      [6, 34, 75, 101, 105, 106, 120, 135, 153, 164, 165, 196, 198, 213, 239],
+    broadband:  [0, 111, 123, 251, 1004, 1828, 1834, 1841, 1844, 1846, 1855, 1870, 1881, 1893, 1896],
+    chelsea:    [39, 1078, 1141, 1409, 1413, 1414, 1416, 1422, 1423, 1424, 1426, 1430, 1433, 1435, 1437],
+    technolog:  [233, 544, 657, 1111, 1832, 1922, 1926, 1933, 1960, 2023, 2069, 2100, 2189, 2193, 2202]
+  },
+  top_terms: [["said",7255],["us",3478],["mr",3046],["year",2610],["would",2577],["new",2488],
+              ["also",2156],["peopl",1971],["on",1816],["game",1615],["sai",1588],["could",1510],
+              ["time",1487],["last",1404],["make",1375]],
+  wildcards: [
+    { pattern: "re*val",   matches: 0,  sample: "" },
+    { pattern: "comput*",  matches: 10, sample: "comput computer' computer-aug computer-bas computer-control computer-gener computer-impl computeract computerandvideogam computeris" },
+    { pattern: "*ology",   matches: 0,  sample: "" },
+    { pattern: "invest*",  matches: 5,  sample: "invest investec investig investment-friendli investor" },
+    { pattern: "gov*ment", matches: 1,  sample: "government" },
+    { pattern: "f*ball",   matches: 0,  sample: "" }
+  ],
+  porter_traces: {
+    relational:   [["input","relational"],["1a","relational"],["1b","relational"],["1c","relational"],["2","relate"],["3","relate"],["4","relate"],["5a","relat"],["5b","relat"]],
+    conditional:  [["input","conditional"],["1a","conditional"],["1b","conditional"],["1c","conditional"],["2","condition"],["3","condition"],["4","condit"],["5a","condit"],["5b","condit"]],
+    investments:  [["input","investments"],["1a","investment"],["1b","investment"],["1c","investment"],["2","investment"],["3","investment"],["4","invest"],["5a","invest"],["5b","invest"]],
+    managing:     [["input","managing"],["1a","managing"],["1b","manag"],["1c","manag"],["2","manag"],["3","manag"],["4","manag"],["5a","manag"],["5b","manag"]],
+    technologies: [["input","technologies"],["1a","technologi"],["1b","technologi"],["1c","technologi"],["2","technologi"],["3","technologi"],["4","technologi"],["5a","technologi"],["5b","technologi"]],
+    announced:    [["input","announced"],["1a","announced"],["1b","announc"],["1c","announc"],["2","announc"],["3","announc"],["4","announc"],["5a","announc"],["5b","announc"]],
+    winning:      [["input","winning"],["1a","winning"],["1b","win"],["1c","win"],["2","win"],["3","win"],["4","win"],["5a","win"],["5b","win"]],
+    universities: [["input","universities"],["1a","universiti"],["1b","universiti"],["1c","universiti"],["2","universiti"],["3","universiti"],["4","univers"],["5a","univers"],["5b","univers"]],
+    agreed:       [["input","agreed"],["1a","agreed"],["1b","agree"],["1c","agree"],["2","agree"],["3","agree"],["4","agree"],["5a","agre"],["5b","agre"]],
+    feed:         [["input","feed"],["1a","feed"],["1b","feed"],["1c","feed"],["2","feed"],["3","feed"],["4","feed"],["5a","feed"],["5b","feed"]]
+  },
+  /* Document frequencies in the stemmed index, from the naive_order column of
+     data/derived/boolean_optimization.csv. */
+  stemmed_df: {
+    oil: 110, elect: 237, broadband: 72, chelsea: 68, oscar: 68, economi: 200, softwar: 135,
+    album: 78, price: 245, mobil: 132, phone: 148, footbal: 114, rugbi: 74, ga: 35,
+    govern: 490, microsoft: 73, appl: 47, share: 299, profit: 143, labour: 227, arsen: 55,
+    leagu: 111, digit: 171, music: 261, internet: 162, secur: 283, film: 285, award: 192,
+    bank: 186, minist: 349, invest: 165, manag: 343, technologi: 241, player: 376,
+    announc: 304, comput: 180, win: 483
+  }
+};
+
+/* Rules that fired, per traced word and step. Stated only where the Porter
+   1980 rule is unambiguous from the recorded before/after pair. */
+const PORTER_RULES = {
+  relational:   { "2": "ational \u2192 ate  (m > 0)", "5a": "remove final e  (m > 1)" },
+  conditional:  { "2": "tional \u2192 tion  (m > 0)", "4": "remove ion  (m > 1, stem ends s or t)" },
+  investments:  { "1a": "s \u2192 \u2205", "4": "remove ment  (m > 1)" },
+  managing:     { "1b": "ing \u2192 \u2205  (stem contains a vowel)" },
+  technologies: { "1a": "ies \u2192 i" },
+  announced:    { "1b": "ed \u2192 \u2205  (stem contains a vowel)" },
+  winning:      { "1b": "ing \u2192 \u2205, then double consonant nn \u2192 n" },
+  universities: { "1a": "ies \u2192 i", "4": "remove iti  (m > 1)" },
+  agreed:       { "1b": "ed \u2192 \u2205  (stem contains a vowel)", "5a": "remove final e  (m > 1)" },
+  feed:         {}
+};
+
+const PORTER_NOTES = {
+  relational: "Two rules fire, in two different groups. Step 2 does the linguistic work; step 5a is pure tidying, removing a terminal e once the stem is long enough to survive it.",
+  conditional: "Step 2 shortens the suffix rather than removing it, then step 4 removes what is left. Ordering matters: without step 2 first, step 4 would find no <code>ion</code> to strip.",
+  investments: "Step 1a strips the plural, step 4 strips the derivational suffix. This is the clean case the algorithm is designed for.",
+  managing: "A single rule, in step 1b, plus its cleanup pass. Steps 2 to 5 all decline, because <code>manag</code> ends in no suffix they recognise.",
+  technologies: "Only step 1a fires. Nothing else touches the word, which is why <code>technologi</code> and <code>technolog</code> stay apart \u2014 see failure 1 in section 5.",
+  announced: "Step 1b removes <code>ed</code> and leaves <code>announc</code>, which is not a word. That is fine: stems are index keys, not English.",
+  winning: "Step 1b removes <code>ing</code> to give <code>winn</code>, then its cleanup rule collapses the doubled consonant. Both halves are needed; either alone gives the wrong stem.",
+  universities: "Step 1a gives <code>universiti</code>, then step 4 strips <code>iti</code>. Compare <code>technologies</code>, where step 4 declines because no step-4 suffix is present.",
+  agreed: "Step 1b removes <code>ed</code>, then step 5a removes the terminal <code>e</code>. The result <code>agre</code> is shorter than either input word.",
+  feed: "Nothing fires. The <code>eed \u2192 ee</code> rule in step 1b is conditioned on m(stem) > 0, and the stem here is just <code>f</code>, whose measure is 0. The guard prevents <code>feed</code> collapsing to <code>fe</code>."
+};
+
+/* A 30-term slice of the vocabulary, drawn from the wildcard samples and
+   frequency table in summary.json, used for the live filtering demonstration. */
+const MINI_VOCAB = [
+  "comput", "computer'", "computer-aug", "computer-bas", "computer-control",
+  "computer-gener", "computer-impl", "computeract", "computerandvideogam", "computeris",
+  "invest", "investec", "investig", "investment-friendli", "investor",
+  "government", "technologi", "technolog", "broadband", "chelsea",
+  "elect", "oil", "said", "peopl", "game", "price", "footbal", "leagu", "music", "film"
+];
+
+const fmt = n => n.toLocaleString("en-GB");
+const el = id => document.getElementById(id);
+const SVGNS = "http://www.w3.org/2000/svg";
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function svg(tag, attrs, text) {
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+function svgRoot(w, h) {
+  const s = svg("svg", { viewBox: `0 0 ${w} ${h}`, width: w, height: h, role: "img" });
+  return s;
+}
+
+/* ------------------------------------------------------------------ theme */
+el("themeToggle").addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme");
+  document.documentElement.setAttribute("data-theme", cur === "dark" ? "light" : "dark");
+});
+
+/* ------------------------------------------------------------------ tabs */
+(function initTabs() {
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  function select(i) {
+    tabs.forEach((t, k) => {
+      const on = k === i;
+      t.setAttribute("aria-selected", String(on));
+      t.tabIndex = on ? 0 : -1;
+      el("panel-" + (k + 1)).hidden = !on;
+    });
+    tabs[i].focus();
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => select(i));
+    t.addEventListener("keydown", e => {
+      let n = null;
+      if (e.key === "ArrowRight") n = (i + 1) % tabs.length;
+      else if (e.key === "ArrowLeft") n = (i - 1 + tabs.length) % tabs.length;
+      else if (e.key === "Home") n = 0;
+      else if (e.key === "End") n = tabs.length - 1;
+      if (n !== null) { e.preventDefault(); select(n); }
+    });
+  });
+})();
+
+/* ============================================================ 1. PIPELINE */
+
+const CAT_ENTRIES = Object.entries(IR.categories);
+
+(function catChart() {
+  const W = 640, H = 190, L = 110, R = 60, T = 10, B = 26;
+  const max = Math.max(...CAT_ENTRIES.map(e => e[1]));
+  const bw = (H - T - B) / CAT_ENTRIES.length;
+  const s = svgRoot(W, H);
+  s.setAttribute("aria-label", "Documents per category: " +
+    CAT_ENTRIES.map(([k, v]) => `${k} ${v}`).join(", "));
+  CAT_ENTRIES.forEach(([k, v], i) => {
+    const y = T + i * bw;
+    const len = (v / max) * (W - L - R);
+    s.appendChild(svg("rect", { x: L, y: y + 4, width: len, height: bw - 10, rx: 3, class: "bar" }));
+    s.appendChild(svg("text", { x: L - 10, y: y + bw / 2 + 4, "text-anchor": "end", class: "label-text" }, k));
+    s.appendChild(svg("text", { x: L + len + 8, y: y + bw / 2 + 4, class: "axis-text" }, fmt(v)));
+  });
+  s.appendChild(svg("line", { x1: L, y1: T, x2: L, y2: H - B, class: "axis" }));
+  s.appendChild(svg("text", { x: L, y: H - 8, class: "axis-text" }, "Documents \u2014 2,225 total, near-uniform across five categories"));
+  el("catChart").appendChild(s);
+})();
+
+const PIPELINE = [
+  { id: "docs", label: "Documents", sub: "2,225",
+    inp: "Five category folders under <code>data/raw/bbc/</code>, each holding plain-text articles.",
+    out: "A list of <code>Document</code> records, each with a stable integer ID, a category and its text. The ID is what every postings list stores.",
+    ex: "<code>data/raw/bbc/business/001.txt</code> becomes document 0. The last document is 2,224.",
+    metric: [["2,225", "Documents"], ["5,041,385", "Raw bytes"], ["854,490", "Whitespace tokens"]],
+    fn: "<code>corpus.load_corpus()</code>, <code>corpus.corpus_stats()</code>" },
+
+  { id: "prep", label: "Preprocessing", sub: "5 configs",
+    inp: "One document's raw text.",
+    out: "A list of term strings. Which transformations apply depends on the configuration: raw, normalized, nostop, stemmed or lemmatized. They are cumulative.",
+    ex: "The regex keeps intra-word apostrophes and hyphens, so <code>don't</code> and <code>Netherlands-based</code> survive as single tokens. Under the stemmed configuration, <code>Technologies announced</code> becomes <code>[technologi, announc]</code>.",
+    metric: [["854,987", "Tokens, raw"], ["497,333", "Tokens, after stop-words"], ["357,654", "Tokens removed"]],
+    fn: "<code>preprocess.Preprocessor</code>, <code>preprocess.tokenize()</code>" },
+
+  { id: "dict", label: "Dictionary", sub: "25,049 terms",
+    inp: "The stream of terms from every document.",
+    out: "A sorted, unique term list plus two columns: document frequency and collection frequency. Kept separate from the postings because in a real system the dictionary fits in memory and the postings do not.",
+    ex: "The most frequent term by collection frequency is <code>said</code> at 7,255 occurrences. 9,505 terms occur exactly once.",
+    metric: [["38,266", "Types, raw"], ["25,049", "Types, stemmed"], ["9,505", "Hapax legomena"]],
+    fn: "<code>dictionary.Vocabulary</code>" },
+
+  { id: "index", label: "Inverted Index", sub: "335,223 postings",
+    inp: "Pairs of (term, document ID).",
+    out: "A map from each term to its sorted list of document IDs. Sorted is not a convenience: every merge algorithm downstream is a single linear pass that assumes it.",
+    ex: "<code>check_invariants()</code> asserts that every postings list is strictly increasing and that no ID exceeds the collection size. If that assertion ever fails, every result below it is meaningless.",
+    metric: [["474,642", "Postings, raw"], ["335,223", "Postings, stemmed"], ["13.383", "Mean df, stemmed"]],
+    fn: "<code>index.InvertedIndex.build()</code>" },
+
+  { id: "post", label: "Postings", sub: "sorted int lists",
+    inp: "A term.",
+    out: "Its postings list \u2014 the documents containing it, ascending.",
+    ex: "<code>oil</code> begins [2, 8, 11, 15, 21, 23, 24, 27, 29, 44, \u2026] and has df 110 in the stemmed index. <code>chelsea</code> begins [39, 1078, 1141, 1409, \u2026]: one stray business article, then a dense run in the sport section, because documents are stored category by category.",
+    metric: [["110", "df(oil)"], ["68", "df(chelsea)"], ["72", "df(broadband)"]],
+    fn: "<code>index.InvertedIndex.postings()</code>, <code>.df()</code>" },
+
+  { id: "bool", label: "Boolean Retrieval", sub: "72% fewer comparisons",
+    inp: "A query string, parsed into an AST of <code>Term</code>, <code>Not</code>, <code>And</code>, <code>Or</code> nodes.",
+    out: "A set of document IDs, plus a <code>QueryStats</code> record counting comparisons, postings touched and elapsed time.",
+    ex: "<code>oil AND price</code> on the stemmed index returns 63 documents and costs 290 comparisons. <code>minister AND NOT chelsea</code> returns 346 documents and costs 4,126 naively but 407 optimised.",
+    metric: [["77,943", "Naive comparisons"], ["21,790", "Optimised"], ["72.0%", "Saving"]],
+    fn: "<code>boolean.parse()</code>, <code>boolean.execute()</code>, <code>intersect / union / difference</code>" },
+
+  { id: "tol", label: "Tolerant Retrieval", sub: "recall \u00d74.5",
+    inp: "A wildcard pattern or a misspelled term.",
+    out: "A set of vocabulary terms to substitute into the query. One 3-gram index over the vocabulary serves both jobs.",
+    ex: "<code>comput*</code> resolves to 10 terms including <code>comput</code>, <code>computeris</code> and <code>computerandvideogam</code>. <code>gov*ment</code> resolves to exactly one: <code>government</code>.",
+    metric: [["0.133 \u2192 0.854", "Macro recall"], ["0.984 \u2192 0.919", "Micro precision"], ["18/20", "Repairs correct"]],
+    fn: "<code>tolerant.KGramIndex</code>, <code>.wildcard()</code>, <code>.nearest()</code>, <code>levenshtein()</code>" },
+
+  { id: "eval", label: "Evaluation", sub: "F1 up to 0.920",
+    inp: "The retrieved set and the relevance judgements from <code>queryset.build_qrels()</code>.",
+    out: "Precision, recall and F1 per query, then macro and micro averages over the query set.",
+    ex: "The stemmed configuration scores macro F1 0.9197 over 30 queries \u2014 the best of the five. The raw configuration scores 0.7032, because case variation splits terms that should be one.",
+    metric: [["30", "Queries"], ["5", "Configurations"], ["0.9197", "Best macro F1"]],
+    fn: "<code>evaluate.score()</code>, <code>macro_average()</code>, <code>micro_average()</code>" }
+];
+
+(function pipelineMap() {
+  const COLS = 4, NW = 208, NH = 62, GX = 34, GY = 60;
+  const W = COLS * NW + (COLS - 1) * GX + 20;
+  const rows = Math.ceil(PIPELINE.length / COLS);
+  const H = rows * NH + (rows - 1) * GY + 20;
+  const s = svgRoot(W, H);
+  s.setAttribute("aria-label", "Pipeline stages, selectable");
+
+  const pos = PIPELINE.map((_, i) => {
+    const r = Math.floor(i / COLS), c = i % COLS;
+    return { x: 10 + c * (NW + GX), y: 10 + r * (NH + GY), r, c };
+  });
+
+  const arrow = (x1, y1, x2, y2, path) => {
+    s.appendChild(svg("path", { d: path || `M${x1},${y1} L${x2},${y2}`, class: "flow-arrow" }));
+    const a = Math.atan2(y2 - y1, x2 - x1);
+    const p = [[x2, y2],
+               [x2 - 8 * Math.cos(a - 0.4), y2 - 8 * Math.sin(a - 0.4)],
+               [x2 - 8 * Math.cos(a + 0.4), y2 - 8 * Math.sin(a + 0.4)]];
+    s.appendChild(svg("polygon", { points: p.map(q => q.join(",")).join(" "), class: "arrow-head" }));
+  };
+
+  for (let i = 0; i < PIPELINE.length - 1; i++) {
+    const a = pos[i], b = pos[i + 1];
+    if (a.r === b.r) {
+      arrow(a.x + NW, a.y + NH / 2, b.x - 4, b.y + NH / 2);
+    } else {
+      const midY = a.y + NH + GY / 2;
+      const d = `M${a.x + NW / 2},${a.y + NH} L${a.x + NW / 2},${midY} L${b.x + NW / 2},${midY} L${b.x + NW / 2},${b.y - 4}`;
+      arrow(b.x + NW / 2, midY, b.x + NW / 2, b.y - 4, d);
+    }
+  }
+
+  PIPELINE.forEach((n, i) => {
+    const g = svg("g", { class: "svg-node", role: "button", tabindex: "0",
+                         "aria-pressed": String(i === 0), "aria-label": n.label, "data-i": String(i) });
+    g.appendChild(svg("rect", { x: pos[i].x, y: pos[i].y, width: NW, height: NH, rx: 10 }));
+    g.appendChild(svg("text", { x: pos[i].x + NW / 2, y: pos[i].y + 26, "text-anchor": "middle" }, n.label));
+    g.appendChild(svg("text", { x: pos[i].x + NW / 2, y: pos[i].y + 45, "text-anchor": "middle", class: "sub" }, n.sub));
+    const pick = () => {
+      s.querySelectorAll(".svg-node").forEach(o => o.setAttribute("aria-pressed", "false"));
+      g.setAttribute("aria-pressed", "true");
+      renderPipeDetail(i);
+    };
+    g.addEventListener("click", pick);
+    g.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); }
+    });
+    s.appendChild(g);
+  });
+
+  el("pipeSvg").appendChild(s);
+  renderPipeDetail(0);
+})();
+
+function renderPipeDetail(i) {
+  const n = PIPELINE[i];
+  el("pipeDetail").innerHTML = `
+    <h3 style="margin-top:20px">${n.label}</h3>
+    <div class="grid2">
+      <div>
+        <p class="small"><b>In.</b> ${n.inp}</p>
+        <p class="small"><b>Out.</b> ${n.out}</p>
+        <p class="small"><b>From the corpus.</b> ${n.ex}</p>
+        <p class="small muted">Implemented by ${n.fn}</p>
+      </div>
+      <div class="grid3" style="align-content:start">
+        ${n.metric.map(([v, k]) => `<div class="stat"><span class="v">${v}</span><span class="k">${k}</span></div>`).join("")}
+      </div>
+    </div>`;
+}
+
+/* ============================================================ 2. BEGINNER */
+
+const TERM_NOTES = {
+  oil: "The postings begin at document 2 and stay low: the business category occupies the first block of IDs. df is 110 in the stemmed index, so this sample is the first 15 of 110.",
+  elect: "This is the stem of <em>election</em>, <em>elected</em> and <em>electoral</em> alike, with df 237. The three-way collapse is exactly what stemming is for \u2014 and the reason recall rises from 0.869 to 0.956.",
+  broadband: "Two clusters, far apart: a few early documents and then a dense run past 1,828. Those are the tech articles. df 72.",
+  chelsea: "One document at 39, then nothing until 1,078, then a tight run. The first is a business story mentioning the club; the rest are sport. df 68.",
+  technolog: "This is <em>not</em> the stem of <em>technology</em>. That is <code>technologi</code>, df 241. <code>technolog</code> is what <em>technological</em> reduces to, and the two never meet. See failure 1 in section 5."
+};
+
+(function beginner() {
+  const terms = Object.keys(IR.sample_postings);
+  const chips = el("termChips");
+  const grid = el("docGrid");
+  const cells = [];
+  for (let d = 0; d < IR.corpus.num_docs; d++) {
+    const c = document.createElement("i");
+    grid.appendChild(c); cells.push(c);
+  }
+  function show(t) {
+    [...chips.children].forEach(b => b.setAttribute("aria-pressed", String(b.dataset.t === t)));
+    const p = IR.sample_postings[t];
+    el("termName").textContent = t;
+    const df = IR.stemmed_df[t];
+    el("termMeta").innerHTML = df
+      ? `df = ${df} \u2014 showing the first ${p.length} postings`
+      : `showing the first ${p.length} postings`;
+    el("termCells").innerHTML = p.map(d => `<span class="cell">${d}</span>`).join("");
+    cells.forEach(c => { c.className = ""; });
+    p.forEach(d => { if (cells[d]) cells[d].className = "on"; });
+    el("termNote").innerHTML = TERM_NOTES[t];
+  }
+  terms.forEach(t => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.type = "button"; b.dataset.t = t; b.textContent = t;
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", () => show(t));
+    chips.appendChild(b);
+  });
+  show(terms[0]);
+})();
+
+(function topTerms() {
+  const data = IR.top_terms;
+  const W = 620, H = 380, L = 92, R = 66, T = 14, B = 30;
+  const max = Math.max(...data.map(d => d[1]));
+  const bh = (H - T - B) / data.length;
+  const s = svgRoot(W, H);
+  s.setAttribute("aria-label", "Top fifteen terms by collection frequency: " +
+    data.map(d => `${d[0]} ${d[1]}`).join(", "));
+  data.forEach(([t, c], i) => {
+    const y = T + i * bh;
+    const len = (c / max) * (W - L - R);
+    s.appendChild(svg("rect", { x: L, y: y + 2.5, width: len, height: bh - 6, rx: 3, class: "bar" }));
+    s.appendChild(svg("text", { x: L - 9, y: y + bh / 2 + 4, "text-anchor": "end", class: "axis-text mono" }, t));
+    s.appendChild(svg("text", { x: L + len + 7, y: y + bh / 2 + 4, class: "axis-text" }, fmt(c)));
+  });
+  s.appendChild(svg("line", { x1: L, y1: T, x2: L, y2: H - B, class: "axis" }));
+  s.appendChild(svg("text", { x: L, y: H - 8, class: "axis-text" }, "Collection frequency, stemmed index (497,333 tokens total)"));
+  el("topTermsChart").appendChild(s);
+})();
+
+/* ============================================================ 3. MERGE */
+
+/* The five corpus lists are the first 15 postings recorded by the build. The
+   two teaching lists are constructed, not measured: no two of the recorded
+   samples share a document, because each is a short prefix of a much longer
+   list and the terms sit in different regions of the corpus. Without a pair
+   that does intersect, the equality branch of the loop never executes. */
+const MERGE_LISTS = Object.assign({}, IR.sample_postings, {
+  "teaching A (constructed)": [1, 3, 4, 7, 9, 12, 16],
+  "teaching B (constructed)": [2, 3, 7, 8, 9, 15]
+});
+const CONSTRUCTED = new Set(["teaching A (constructed)", "teaching B (constructed)"]);
+
+const merge = {
+  op: "AND", a: [], b: [], an: "", bn: "",
+  i: 0, j: 0, out: [], cmp: 0, done: false, last: null
+};
+
+(function initMerge() {
+  const terms = Object.keys(MERGE_LISTS);
+  const sa = el("mergeA"), sb = el("mergeB");
+  terms.forEach(t => {
+    sa.appendChild(new Option(t, t));
+    sb.appendChild(new Option(t, t));
+  });
+  sa.value = "teaching A (constructed)"; sb.value = "teaching B (constructed)";
+
+  document.querySelectorAll("[data-op]").forEach(b => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll("[data-op]").forEach(o => o.setAttribute("aria-pressed", "false"));
+      b.setAttribute("aria-pressed", "true");
+      merge.op = b.dataset.op;
+      resetMerge();
+    });
+  });
+  sa.addEventListener("change", resetMerge);
+  sb.addEventListener("change", resetMerge);
+  el("stepBtn").addEventListener("click", stepMerge);
+  el("resetBtn").addEventListener("click", resetMerge);
+  el("runBtn").addEventListener("click", runMerge);
+  resetMerge();
+})();
+
+function resetMerge() {
+  merge.an = el("mergeA").value;
+  merge.bn = el("mergeB").value;
+  merge.a = MERGE_LISTS[merge.an].slice();
+  merge.b = MERGE_LISTS[merge.bn].slice();
+  merge.i = 0; merge.j = 0; merge.out = []; merge.cmp = 0;
+  merge.done = false; merge.last = null;
+  el("mergeExplain").innerHTML =
+    "Ready. The pointers <code>i</code> and <code>j</code> both start at position 0.";
+  el("stepBtn").disabled = false;
+  el("runBtn").disabled = false;
+  describeLists();
+  drawMerge();
+}
+
+function describeLists() {
+  const fakeA = CONSTRUCTED.has(merge.an), fakeB = CONSTRUCTED.has(merge.bn);
+  const parts = [];
+  if (fakeA || fakeB) parts.push(
+    "The <b>teaching</b> lists are short constructed examples, not corpus data. They are here " +
+    "because no two of the recorded samples share a document, so without them the equality " +
+    "branch of the loop would never execute.");
+  if (!fakeA || !fakeB) parts.push(
+    "A named term carries the first fifteen postings of that term as recorded by your build \u2014 " +
+    "real, but a prefix. The comparison counts shown are for these prefixes, not the full lists.");
+  if (!fakeA && !fakeB) parts.push(
+    "Expect AND to return nothing between two named terms: <code>oil</code> starts at document 2 " +
+    "while <code>chelsea</code> sits mostly past 1,400, and a fifteen-element prefix of one " +
+    "cannot reach the other. Over the full lists these queries do intersect \u2014 " +
+    "<code>oil AND price</code> returns 63 documents.");
+  el("mergeProvenance").innerHTML = parts.join(" ");
+}
+
+/* Mirrors intersect / union / difference in boolean.py: one comparison per
+   loop iteration, counted before the branch. */
+function stepMerge() {
+  if (merge.done) return;
+  const { a, b, op } = merge;
+  if (merge.i < a.length && merge.j < b.length) {
+    merge.cmp++;
+    const x = a[merge.i], y = b[merge.j];
+    if (x === y) {
+      if (op === "AND") { merge.out.push(x); merge.last = `Equal. <b>${x}</b> is in both lists, so AND emits it. Both pointers advance.`; }
+      else if (op === "OR") { merge.out.push(x); merge.last = `Equal. <b>${x}</b> is emitted once, not twice. Both pointers advance.`; }
+      else { merge.last = `Equal. <b>${x}</b> is in B, so AND NOT discards it. Both pointers advance.`; }
+      merge.i++; merge.j++;
+    } else if (x < y) {
+      if (op === "AND") { merge.last = `<b>${x}</b> &lt; <b>${y}</b>. Since B is sorted, ${x} cannot appear later in B, so it is discarded. Pointer <code>i</code> advances.`; }
+      else if (op === "OR") { merge.out.push(x); merge.last = `<b>${x}</b> &lt; <b>${y}</b>. OR emits the smaller value, ${x}. Pointer <code>i</code> advances.`; }
+      else { merge.out.push(x); merge.last = `<b>${x}</b> &lt; <b>${y}</b>. Since B is sorted, ${x} cannot be in B, so AND NOT emits it. Pointer <code>i</code> advances.`; }
+      merge.i++;
+    } else {
+      if (op === "OR") { merge.out.push(y); merge.last = `<b>${y}</b> &lt; <b>${x}</b>. OR emits the smaller value, ${y}. Pointer <code>j</code> advances.`; }
+      else if (op === "AND") { merge.last = `<b>${y}</b> &lt; <b>${x}</b>. ${y} cannot appear later in A, so it is skipped. Pointer <code>j</code> advances.`; }
+      else { merge.last = `<b>${y}</b> &lt; <b>${x}</b>. Nothing to exclude yet; skip past ${y}. Pointer <code>j</code> advances.`; }
+      merge.j++;
+    }
+  } else {
+    merge.done = true;
+    if (op === "AND") {
+      merge.last = `One list is exhausted. AND stops immediately \u2014 no unmatched value can be in both \u2014 having used <b>${merge.cmp}</b> comparisons.`;
+    } else if (op === "OR") {
+      const tail = merge.a.slice(merge.i).concat(merge.b.slice(merge.j));
+      merge.out = merge.out.concat(tail);
+      merge.last = `One list is exhausted. OR appends the remaining ${tail.length} value(s) with <b>no further comparisons</b>: they are already sorted and cannot collide.`;
+    } else {
+      const tail = merge.a.slice(merge.i);
+      merge.out = merge.out.concat(tail);
+      merge.last = `B is exhausted, so everything left in A survives. ${tail.length} value(s) appended with <b>no further comparisons</b>.`;
+    }
+    el("stepBtn").disabled = true;
+    el("runBtn").disabled = true;
+  }
+  drawMerge();
+}
+
+function runMerge() {
+  let guard = 0;
+  while (!merge.done && guard++ < 500) stepMerge();
+}
+
+function drawMerge() {
+  const lane = (node, arr, ptr, isA) => {
+    node.innerHTML = "";
+    arr.forEach((v, k) => {
+      const c = document.createElement("span");
+      c.className = "cell";
+      if (k < ptr) c.classList.add("done");
+      if (k === ptr && !merge.done) {
+        c.classList.add("ptr");
+        const other = isA ? merge.b[merge.j] : merge.a[merge.i];
+        if (other === v) c.classList.add("hit");
+      }
+      c.textContent = v;
+      node.appendChild(c);
+    });
+  };
+  el("laneAName").textContent = merge.an;
+  el("laneBName").textContent = merge.bn;
+  el("laneAMeta").innerHTML = `list A \u2014 ${merge.a.length} postings, pointer i = ${merge.i}`;
+  el("laneBMeta").innerHTML = `list B \u2014 ${merge.b.length} postings, pointer j = ${merge.j}`;
+  lane(el("laneA"), merge.a, merge.i, true);
+  lane(el("laneB"), merge.b, merge.j, false);
+
+  const out = el("laneOut");
+  out.innerHTML = merge.out.length
+    ? merge.out.map(v => `<span class="cell out">${v}</span>`).join("")
+    : `<span class="cell empty">empty</span>`;
+
+  if (merge.last) el("mergeExplain").innerHTML = merge.last;
+  el("cmpCount").textContent = fmt(merge.cmp);
+  el("outCount").textContent = fmt(merge.out.length);
+  el("posI").textContent = merge.i;
+  el("posJ").textContent = merge.j;
+}
+
+/* ------------------------------------------------------------ porter tracer */
+(function porter() {
+  const words = Object.keys(IR.porter_traces);
+  const chips = el("porterChips");
+  function show(w) {
+    [...chips.children].forEach(b => b.setAttribute("aria-pressed", String(b.dataset.w === w)));
+    const trace = IR.porter_traces[w];
+    const rules = PORTER_RULES[w] || {};
+    let prev = null, fired = 0;
+    el("porterTrace").innerHTML = trace.map(([step, val]) => {
+      const changed = prev !== null && val !== prev;
+      if (changed) fired++;
+      const rule = changed
+        ? (rules[step] || "rule fired")
+        : (step === "input" ? "the word as tokenised" : "no rule in this group matched");
+      prev = val;
+      return `<div class="trace-row${changed ? " changed" : ""}">
+                <span class="step">${step}</span>
+                <span class="val">${val}</span>
+                <span class="rule">${rule}</span>
+              </div>`;
+    }).join("");
+    const final = trace[trace.length - 1][1];
+    el("porterNote").innerHTML =
+      `<b>${w} \u2192 ${final}</b> \u2014 the value changed at ${fired} of the eight rule groups. ` +
+      PORTER_NOTES[w];
+  }
+  words.forEach(w => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.type = "button"; b.dataset.w = w; b.textContent = w;
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", () => show(w));
+    chips.appendChild(b);
+  });
+  show("relational");
+})();
+
+/* ============================================================ 4. ADVANCED */
+
+const order = { chosen: [] };
+
+(function reorder() {
+  const pool = el("orderPool");
+  const candidates = ["ga", "appl", "arsen", "chelsea", "oil", "leagu", "digit", "bank",
+                      "award", "elect", "price", "music", "share", "manag", "minist", "govern"];
+  candidates.forEach(t => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.type = "button";
+    b.innerHTML = `${t} <span class="muted tiny">df ${IR.stemmed_df[t]}</span>`;
+    b.setAttribute("aria-label", `Add ${t}, document frequency ${IR.stemmed_df[t]}`);
+    b.addEventListener("click", () => {
+      if (order.chosen.includes(t)) order.chosen = order.chosen.filter(x => x !== t);
+      else if (order.chosen.length < 3) order.chosen.push(t);
+      drawOrder();
+    });
+    b.dataset.t = t;
+    pool.appendChild(b);
+  });
+  order.chosen = ["govern", "price", "ga"];
+  drawOrder();
+})();
+
+/* Upper bound on merge comparisons for a left-to-right AND chain.
+   Each pairwise intersect compares at most |a| + |b| times; the accumulator
+   after an intersection is at most min(|a|, |b|). */
+function andBound(dfs) {
+  if (dfs.length < 2) return 0;
+  let acc = dfs[0], total = 0;
+  for (let k = 1; k < dfs.length; k++) {
+    total += acc + dfs[k];
+    acc = Math.min(acc, dfs[k]);
+  }
+  return total;
+}
+
+function drawOrder() {
+  const pool = el("orderPool");
+  [...pool.children].forEach(b =>
+    b.setAttribute("aria-pressed", String(order.chosen.includes(b.dataset.t))));
+
+  const list = el("orderList");
+  list.innerHTML = "";
+  if (!order.chosen.length) {
+    list.innerHTML = `<span class="chip muted">nothing selected</span>`;
+  }
+  order.chosen.forEach((t, k) => {
+    const wrap = document.createElement("span");
+    wrap.className = "chip";
+    wrap.innerHTML = `<b>${t}</b> <span class="muted tiny">df ${IR.stemmed_df[t]}</span> `;
+    const mk = (label, delta, aria) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = label; b.setAttribute("aria-label", aria);
+      b.style.padding = "0 5px"; b.style.marginLeft = "3px"; b.style.borderRadius = "5px";
+      b.disabled = (delta < 0 && k === 0) || (delta > 0 && k === order.chosen.length - 1);
+      b.addEventListener("click", () => {
+        const n = k + delta;
+        [order.chosen[k], order.chosen[n]] = [order.chosen[n], order.chosen[k]];
+        drawOrder();
+      });
+      return b;
+    };
+    wrap.appendChild(mk("\u2190", -1, `Move ${t} earlier`));
+    wrap.appendChild(mk("\u2192", 1, `Move ${t} later`));
+    list.appendChild(wrap);
+  });
+
+  if (order.chosen.length < 2) {
+    el("boundYours").textContent = "\u2014";
+    el("boundBest").textContent = "\u2014";
+    el("boundSave").textContent = "\u2014";
+    el("orderExplain").textContent = "Add two or three terms to begin.";
+    return;
+  }
+  const dfs = order.chosen.map(t => IR.stemmed_df[t]);
+  const best = [...order.chosen].sort((x, y) => IR.stemmed_df[x] - IR.stemmed_df[y]);
+  const bY = andBound(dfs), bB = andBound(best.map(t => IR.stemmed_df[t]));
+  el("boundYours").textContent = fmt(bY);
+  el("boundBest").textContent = fmt(bB);
+  el("boundSave").textContent = bY === bB ? "0" : "\u2212" + fmt(bY - bB);
+
+  const same = order.chosen.join(" ") === best.join(" ");
+  el("orderExplain").innerHTML = same
+    ? `Your order <code>${order.chosen.join(" AND ")}</code> is already df-ascending, so it is the
+       cheapest arrangement available. The bound is <b>${fmt(bY)}</b> comparisons. Every other
+       arrangement of these three terms costs at least as much, and the result set is identical
+       in all of them.`
+    : `Your order costs a bound of <b>${fmt(bY)}</b>; the df-ascending order
+       <code>${best.join(" AND ")}</code> costs <b>${fmt(bB)}</b>, a difference of
+       <b>${fmt(bY - bB)}</b>. The reason is that the first merge fixes the size of the
+       accumulator for everything after it: starting from <code>${order.chosen[0]}</code>
+       (df ${IR.stemmed_df[order.chosen[0]]}) carries more work forward than starting from
+       <code>${best[0]}</code> (df ${IR.stemmed_df[best[0]]}). This is what
+       <code>_estimated_size()</code> predicts before evaluation begins.`;
+}
+
+/* ------------------------------------------------------------ wildcards */
+
+/* Mirrors KGramIndex._candidates_for: pad with $, split on *, take 3-grams of
+   every literal run of length >= k. */
+function patternGrams(pattern, k) {
+  k = k || 3;
+  const padded = "$" + pattern + "$";
+  const grams = [];
+  padded.split("*").forEach(run => {
+    if (run.length >= k) {
+      for (let i = 0; i <= run.length - k; i++) grams.push(run.slice(i, i + k));
+    }
+  });
+  return grams;
+}
+function termGrams(term, k) {
+  k = k || 3;
+  const padded = "$" + term + "$";
+  if (padded.length < k) return [padded];
+  const out = [];
+  for (let i = 0; i <= padded.length - k; i++) out.push(padded.slice(i, i + k));
+  return out;
+}
+function escapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\-]/g, "\\$&"); }
+
+const WILD_NOTES = {
+  "comput*": "Ten terms, and they are not all what you would want: <code>computerandvideogam</code> is a URL fragment that survived tokenisation, and <code>computer'</code> kept a stray apostrophe. Wildcard expansion is indiscriminate by design \u2014 it returns whatever is in the dictionary.",
+  "invest*": "Five terms, including <code>investec</code>, a South African bank, which shares a prefix with <code>invest</code> but nothing else. The k-gram index cannot tell the difference, and neither can the regex: the pattern genuinely does match.",
+  "gov*ment": "Exactly one term survives. The literal runs <code>$gov</code> and <code>ment$</code> both yield useful grams, and the regex <code>^gov.*ment$</code> anchors both ends, so this is about as precise as wildcard matching gets.",
+  "re*val": "Zero matches over the full dictionary, and this pattern is the reason stage 3 exists. A k-gram index records which pieces a term contains, never in what order, so <code>$re</code>, <code>val</code> and <code>al$</code> would be satisfied by any term holding all three however arranged. The anchored regex <code>^re.*val$</code> is what enforces the ordering. In this 30-term slice the intersection is already empty, so there is nothing for the regex to reject \u2014 over the real 25,049-term vocabulary it has work to do.",
+  "*ology": "Zero matches over the stemmed vocabulary. The suffix <code>-ology</code> does not survive stemming: <code>technology</code> became <code>technologi</code>. A wildcard is only as good as the term forms actually stored.",
+  "f*ball": "Zero matches. <code>football</code> stems to <code>footbal</code> with one l, so the literal run <code>ball$</code> matches nothing. This is a good reminder that wildcards operate on the index, not on English."
+};
+
+(function wildcards() {
+  const chips = el("wildChips");
+  function show(p) {
+    [...chips.children].forEach(b => b.setAttribute("aria-pressed", String(b.dataset.p === p)));
+    const rec = IR.wildcards.find(w => w.pattern === p);
+    const grams = patternGrams(p, 3);
+
+    el("wildGrams").innerHTML = grams.length
+      ? grams.map(g => `<span class="chip mono">${g}</span>`).join("")
+      : `<span class="chip muted">no literal run reaches length 3</span>`;
+    el("wildGramNote").innerHTML = grams.length
+      ? `Padded to <code>$${p}$</code>, split on <code>*</code>, then every 3-gram of each run of
+         length \u2265 3. Runs shorter than k contribute nothing, which is why a pattern like
+         <code>a*b</code> would fall back to scanning the whole vocabulary.`
+      : `Every literal run is shorter than k = 3, so <code>_candidates_for</code> falls back to the
+         entire vocabulary.`;
+
+    let cands = MINI_VOCAB.filter(t => {
+      const tg = new Set(termGrams(t, 3));
+      return grams.every(g => tg.has(g));
+    });
+    if (!grams.length) cands = MINI_VOCAB.slice();
+
+    el("wildCands").innerHTML = cands.length
+      ? cands.map(t => `<span class="chip mono">${t}</span>`).join("")
+      : `<span class="chip muted">empty \u2014 no term in the slice holds every gram</span>`;
+
+    const src = "^" + p.split("*").map(escapeRe).join(".*") + "$";
+    el("wildRegex").textContent = src;
+    const re = new RegExp(src);
+    const kept = cands.filter(t => re.test(t));
+    const dropped = cands.length - kept.length;
+    el("wildKept").innerHTML = kept.length
+      ? kept.map(t => `<span class="chip mono">${t}</span>`).join("") +
+        (dropped ? `<span class="chip muted">${dropped} rejected</span>` : "")
+      : `<span class="chip muted">${cands.length ? cands.length + " candidate(s), all rejected" : "nothing to filter"}</span>`;
+
+    el("wildCount").textContent = rec.matches;
+    const sample = rec.sample ? rec.sample.split(" ") : [];
+    el("wildNote").innerHTML =
+      (sample.length
+        ? `Measured matches over the full dictionary: ` +
+          sample.map(t => `<code>${t}</code>`).join(", ") + ". "
+        : "") + WILD_NOTES[p];
+  }
+  IR.wildcards.forEach(w => {
+    const b = document.createElement("button");
+    b.className = "chip mono"; b.type = "button"; b.dataset.p = w.pattern;
+    b.textContent = w.pattern;
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", () => show(w.pattern));
+    chips.appendChild(b);
+  });
+  show("comput*");
+})();
+
+/* ------------------------------------------------------------ dp grid */
+
+function levMatrix(a, b) {
+  const m = [];
+  for (let i = 0; i <= a.length; i++) m.push(new Array(b.length + 1).fill(0));
+  for (let i = 0; i <= a.length; i++) m[i][0] = i;
+  for (let j = 0; j <= b.length; j++) m[0][j] = j;
+  for (let i = 1; i <= a.length; i++)
+    for (let j = 1; j <= b.length; j++)
+      m[i][j] = Math.min(m[i - 1][j] + 1, m[i][j - 1] + 1,
+                         m[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return m;
+}
+
+(function dp() {
+  const A = "pirce", B = "price";
+  const M = levMatrix(A, B);
+  const path = new Set();
+  let i = A.length, j = B.length;
+  while (i > 0 || j > 0) {
+    path.add(i + "," + j);
+    if (i > 0 && j > 0 &&
+        M[i][j] === M[i - 1][j - 1] + (A[i - 1] === B[j - 1] ? 0 : 1)) { i--; j--; }
+    else if (i > 0 && M[i][j] === M[i - 1][j] + 1) i--;
+    else j--;
+  }
+  path.add("0,0");
+
+  const tbl = document.createElement("table");
+  tbl.className = "dp";
+  tbl.setAttribute("aria-label", `Levenshtein matrix for ${A} against ${B}, distance 2`);
+  const head = tbl.insertRow();
+  head.appendChild(Object.assign(document.createElement("th"), { textContent: "" }));
+  head.appendChild(Object.assign(document.createElement("th"), { textContent: "\u2205" }));
+  [...B].forEach(c => head.appendChild(Object.assign(document.createElement("th"), { textContent: c })));
+
+  for (let r = 0; r <= A.length; r++) {
+    const tr = tbl.insertRow();
+    tr.appendChild(Object.assign(document.createElement("th"),
+      { textContent: r === 0 ? "\u2205" : A[r - 1] }));
+    for (let c = 0; c <= B.length; c++) {
+      const td = tr.insertCell();
+      td.textContent = M[r][c];
+      td.tabIndex = 0;
+      if (path.has(r + "," + c)) td.classList.add("path");
+      if (r === A.length && c === B.length) td.classList.add("final");
+      const pick = () => {
+        tbl.querySelectorAll("td.sel").forEach(x => x.classList.remove("sel"));
+        td.classList.add("sel");
+        explainCell(A, B, M, r, c);
+      };
+      td.addEventListener("click", pick);
+      td.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); }
+      });
+    }
+  }
+  el("dpGrid").appendChild(tbl);
+  explainCell(A, B, M, A.length, B.length);
+})();
+
+function explainCell(A, B, M, r, c) {
+  const node = el("dpExplain");
+  if (r === 0 && c === 0) {
+    node.innerHTML = `<b>(0, 0) = 0.</b> Turning the empty prefix into the empty prefix costs nothing. Every other cell is built from this one.`;
+    return;
+  }
+  if (r === 0 || c === 0) {
+    node.innerHTML = `<b>(${r}, ${c}) = ${M[r][c]}.</b> A border cell. Turning
+      "<code>${A.slice(0, r) || "\u2205"}</code>" into "<code>${B.slice(0, c) || "\u2205"}</code>"
+      can only be done by ${r === 0 ? "inserting" : "deleting"} ${M[r][c]} character(s).`;
+    return;
+  }
+  const del = M[r - 1][c] + 1, ins = M[r][c - 1] + 1;
+  const same = A[r - 1] === B[c - 1];
+  const sub = M[r - 1][c - 1] + (same ? 0 : 1);
+  const v = M[r][c];
+  const win = [];
+  if (del === v) win.push("delete");
+  if (ins === v) win.push("insert");
+  if (sub === v) win.push(same ? "match (free)" : "substitute");
+  node.innerHTML =
+    `<b>(${r}, ${c}) = ${v}.</b> Cheapest edit of "<code>${A.slice(0, r)}</code>" into
+     "<code>${B.slice(0, c)}</code>". Comparing <code>${A[r - 1]}</code> with
+     <code>${B[c - 1]}</code>${same ? " \u2014 they match, so substitution is free" : ""}.<br>
+     <span class="small">
+       delete = ${M[r - 1][c]} + 1 = <b>${del}</b> &nbsp;\u00b7&nbsp;
+       insert = ${M[r][c - 1]} + 1 = <b>${ins}</b> &nbsp;\u00b7&nbsp;
+       ${same ? "match" : "substitute"} = ${M[r - 1][c - 1]} + ${same ? 0 : 1} = <b>${sub}</b>
+       &nbsp;\u2192&nbsp; minimum ${v}, via ${win.join(" or ")}.
+     </span>`;
+}
+
+/* ============================================================ 5. EXPERT */
+
+const CONFIGS = ["raw", "normalized", "nostop", "stemmed", "lemmatized"];
+const CONFIG_LABEL = { raw: "raw", normalized: "normalized", nostop: "nostop",
+                       stemmed: "stemmed", lemmatized: "lemmatized" };
+const PR_NOTES = {
+  macro: `Macro-averaging scores each query separately, then averages the scores. Every query counts
+          the same regardless of how many documents it touches, so a query returning three documents
+          weighs as much as one returning three hundred. It is the fairer view of "does this work on
+          a typical query".`,
+  micro: `Micro-averaging pools every retrieved and relevant document across all 30 queries, then
+          computes one score. Large queries dominate. Note how much lower every recall figure is
+          here than under macro-averaging \u2014 the queries that miss most are the ones with the
+          largest relevant sets.`
+};
+
+let avgMode = "macro";
+
+function drawPR() {
+  const host = el("prPlot");
+  host.innerHTML = "";
+  const W = 470, H = 400, L = 62, R = 30, T = 30, B = 52;
+  const LO = 0.5;                       // axes are zoomed; all ten figures exceed 0.5
+  const px = p => L + ((p - LO) / (1 - LO)) * (W - L - R);
+  const py = r => H - B - ((r - LO) / (1 - LO)) * (H - T - B);
+  const s = svgRoot(W, H);
+  s.setAttribute("aria-label", "Precision against recall for five configurations, " + avgMode +
+    " averaged. " + CONFIGS.map(c => {
+      const m = IR.evaluation[c][avgMode];
+      return `${c}: precision ${m.precision.toFixed(3)}, recall ${m.recall.toFixed(3)}`;
+    }).join("; "));
+
+  for (let g = 5; g <= 10; g++) {
+    const t = g / 10;
+    s.appendChild(svg("line", { x1: px(t), y1: T, x2: px(t), y2: H - B, class: "gridline" }));
+    s.appendChild(svg("line", { x1: L, y1: py(t), x2: W - R, y2: py(t), class: "gridline" }));
+    s.appendChild(svg("text", { x: px(t), y: H - B + 16, "text-anchor": "middle", class: "axis-text" }, t.toFixed(1)));
+    s.appendChild(svg("text", { x: L - 8, y: py(t) + 4, "text-anchor": "end", class: "axis-text" }, t.toFixed(1)));
+  }
+  s.appendChild(svg("line", { x1: L, y1: H - B, x2: W - R, y2: H - B, class: "axis" }));
+  s.appendChild(svg("line", { x1: L, y1: T, x2: L, y2: H - B, class: "axis" }));
+  s.appendChild(svg("text", { x: (L + W - R) / 2, y: H - 8, "text-anchor": "middle", class: "axis-text" },
+    "Recall \u2014 both axes start at 0.5"));
+  s.appendChild(svg("text", { x: 14, y: (T + H - B) / 2, "text-anchor": "middle", class: "axis-text",
+                              transform: `rotate(-90 14 ${(T + H - B) / 2})` }, "Precision"));
+
+  const pts = CONFIGS.map(c => {
+    const m = IR.evaluation[c][avgMode];
+    return { c, x: px(m.recall), y: py(m.precision), m };
+  });
+  s.appendChild(svg("path", { d: pts.map((p, i) => `${i ? "L" : "M"}${p.x},${p.y}`).join(" "),
+                              class: "pt-ring", "stroke-dasharray": "4 4" }));
+
+  /* normalized and nostop score identically on all six figures, so they land on
+     the same coordinates; label them once rather than stacking two strings. */
+  const drawn = new Map();
+  pts.forEach(p => {
+    const key = p.x.toFixed(1) + "," + p.y.toFixed(1);
+    if (drawn.has(key)) { drawn.get(key).push(p.c); return; }
+    drawn.set(key, [p.c]);
+    s.appendChild(svg("circle", { cx: p.x, cy: p.y, r: 6.5, class: "pt" }));
+  });
+
+  const PLACE = { raw: [11, 5], normalized: [0, -13], nostop: [0, -13],
+                  stemmed: [-12, 19], lemmatized: [-12, 5] };
+  drawn.forEach((names, key) => {
+    const [x, y] = key.split(",").map(Number);
+    const p = pts.find(q => q.x.toFixed(1) === x.toFixed(1) && q.y.toFixed(1) === y.toFixed(1));
+    const [dx, dy] = PLACE[names[0]] || [10, -11];
+    s.appendChild(svg("text", {
+      x: p.x + dx, y: p.y + dy,
+      "text-anchor": dx < 0 ? "end" : (dx === 0 ? "middle" : "start"),
+      class: "axis-text mono"
+    }, names.join(" = ")));
+  });
+  host.appendChild(s);
+
+  const tb = el("evalTable").querySelector("tbody");
+  tb.innerHTML = CONFIGS.map(c => {
+    const m = IR.evaluation[c][avgMode];
+    return `<tr><td class="mono">${CONFIG_LABEL[c]}</td><td>${m.precision.toFixed(4)}</td>
+            <td>${m.recall.toFixed(4)}</td><td>${m.f1.toFixed(4)}</td></tr>`;
+  }).join("");
+  el("prNote").innerHTML = PR_NOTES[avgMode];
+}
+
+document.querySelectorAll("[data-avg]").forEach(b => {
+  b.addEventListener("click", () => {
+    document.querySelectorAll("[data-avg]").forEach(o => o.setAttribute("aria-pressed", "false"));
+    b.setAttribute("aria-pressed", "true");
+    avgMode = b.dataset.avg;
+    drawPR();
+  });
+});
+drawPR();
+
+(function vocabChart() {
+  const seq = ["raw", "normalized", "nostop", "stemmed", "lemmatized"];
+  const data = seq.map(n => IR.indexes.find(x => x.index === n));
+  const W = 900, H = 300, L = 66, R = 22, T = 22, B = 62;
+  const max = 40000;
+  const bw = (W - L - R) / data.length;
+  const s = svgRoot(W, H);
+  s.setAttribute("aria-label", "Vocabulary size by configuration: " +
+    data.map(d => `${d.index} ${d.vocabulary_size}`).join(", "));
+  const py = v => H - B - (v / max) * (H - T - B);
+
+  for (let g = 0; g <= 40000; g += 10000) {
+    s.appendChild(svg("line", { x1: L, y1: py(g), x2: W - R, y2: py(g), class: "gridline" }));
+    s.appendChild(svg("text", { x: L - 8, y: py(g) + 4, "text-anchor": "end", class: "axis-text" }, fmt(g)));
+  }
+  data.forEach((d, i) => {
+    const x = L + i * bw + bw * 0.2, w = bw * 0.6;
+    const cumulative = d.index !== "lemmatized";
+    s.appendChild(svg("rect", { x, y: py(d.vocabulary_size), width: w,
+                                height: (H - B) - py(d.vocabulary_size), rx: 4,
+                                class: cumulative ? "bar" : "bar-alt" }));
+    s.appendChild(svg("text", { x: x + w / 2, y: py(d.vocabulary_size) - 7, "text-anchor": "middle", class: "label-text" }, fmt(d.vocabulary_size)));
+    s.appendChild(svg("text", { x: x + w / 2, y: H - B + 17, "text-anchor": "middle", class: "axis-text mono" }, d.index));
+    s.appendChild(svg("text", { x: x + w / 2, y: H - B + 32, "text-anchor": "middle", class: "axis-text" }, fmt(d.hapax_legomena) + " hapax"));
+    if (i > 0 && cumulative) {
+      const prev = data[i - 1].vocabulary_size;
+      s.appendChild(svg("text", { x: x + w / 2, y: H - B + 47, "text-anchor": "middle", class: "axis-text" },
+        "\u2212" + fmt(prev - d.vocabulary_size)));
+    }
+  });
+  s.appendChild(svg("line", { x1: L, y1: H - B, x2: W - R, y2: H - B, class: "axis" }));
+  s.appendChild(svg("text", { x: W - R, y: T + 4, "text-anchor": "end", class: "axis-text" },
+    "Vocabulary size \u2014 lemmatized is a branch off nostop, not a further step"));
+  el("vocabChart").appendChild(s);
+})();
+
+(function tolChart() {
+  const metrics = [
+    { k: "Macro precision", e: IR.tolerant.exact.macro.precision, t: IR.tolerant.tolerant.macro.precision },
+    { k: "Macro recall",    e: IR.tolerant.exact.macro.recall,    t: IR.tolerant.tolerant.macro.recall },
+    { k: "Macro F1",        e: IR.tolerant.exact.macro.f1,        t: IR.tolerant.tolerant.macro.f1 },
+    { k: "Micro precision", e: IR.tolerant.exact.micro.precision, t: IR.tolerant.tolerant.micro.precision },
+    { k: "Micro recall",    e: IR.tolerant.exact.micro.recall,    t: IR.tolerant.tolerant.micro.recall },
+    { k: "Micro F1",        e: IR.tolerant.exact.micro.f1,        t: IR.tolerant.tolerant.micro.f1 }
+  ];
+  const W = 470, H = 330, L = 118, R = 56, T = 26, B = 30;
+  const rh = (H - T - B) / metrics.length;
+  const s = svgRoot(W, H);
+  s.setAttribute("aria-label", "Exact against tolerant retrieval over 20 misspelled queries");
+  const px = v => L + v * (W - L - R);
+
+  metrics.forEach((m, i) => {
+    const y = T + i * rh + rh / 2;
+    s.appendChild(svg("line", { x1: px(0), y1: y, x2: px(1), y2: y, class: "gridline" }));
+    s.appendChild(svg("line", { x1: px(m.e), y1: y, x2: px(m.t), y2: y, class: "pt-ring" }));
+    s.appendChild(svg("circle", { cx: px(m.e), cy: y, r: 4.5, class: "bar-alt" }));
+    s.appendChild(svg("circle", { cx: px(m.t), cy: y, r: 5.5, class: "pt" }));
+    s.appendChild(svg("text", { x: L - 9, y: y + 4, "text-anchor": "end", class: "axis-text" }, m.k));
+    s.appendChild(svg("text", { x: px(1) + 8, y: y + 4, class: "axis-text" }, m.t.toFixed(3)));
+  });
+  s.appendChild(svg("text", { x: L, y: 14, class: "axis-text" }, "\u25cf exact   \u25cf tolerant   (20 misspelled queries)"));
+  s.appendChild(svg("text", { x: px(0), y: H - 10, "text-anchor": "middle", class: "axis-text" }, "0"));
+  s.appendChild(svg("text", { x: px(1), y: H - 10, "text-anchor": "middle", class: "axis-text" }, "1"));
+  el("tolChart").appendChild(s);
+})();
+</script>
+</body>
+</html>

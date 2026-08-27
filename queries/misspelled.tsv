@@ -1,0 +1,21 @@
+qid	base_qid	corruption	query
+m01	q01	doubling	oill
+m02	q02	omission	electon
+m03	q03	omission	brodband
+m04	q04	transposition	chelsae
+m05	q05	substitution	oscer
+m06	q06	omission	ecnomy
+m07	q07	substitution	softwear
+m08	q08	doubling	albbum
+m09	q09	transposition	oil AND pirce
+m10	q10	transposition	moblie AND phone
+m11	q11	substitution	futball OR rugby
+m12	q12	doubling	(oil OR gass) AND prices
+m13	q13	omission	goverment AND economy
+m14	q14	omission	(microsft OR apple) AND software
+m15	q15	transposition	sahres AND profits
+m16	q16	transposition	election AND labuor
+m17	q18	transposition	digital AND musci
+m18	q19	doubling	internett AND security
+m19	q20	omission	film AND awrds
+m20	q25	omission	managment

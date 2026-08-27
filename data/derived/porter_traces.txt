@@ -1,0 +1,10 @@
+relational     input:relational -> 1a:relational -> 1b:relational -> 1c:relational -> 2:relate -> 3:relate -> 4:relate -> 5a:relat -> 5b:relat
+conditional    input:conditional -> 1a:conditional -> 1b:conditional -> 1c:conditional -> 2:condition -> 3:condition -> 4:condit -> 5a:condit -> 5b:condit
+investments    input:investments -> 1a:investment -> 1b:investment -> 1c:investment -> 2:investment -> 3:investment -> 4:invest -> 5a:invest -> 5b:invest
+managing       input:managing -> 1a:managing -> 1b:manag -> 1c:manag -> 2:manag -> 3:manag -> 4:manag -> 5a:manag -> 5b:manag
+technologies   input:technologies -> 1a:technologi -> 1b:technologi -> 1c:technologi -> 2:technologi -> 3:technologi -> 4:technologi -> 5a:technologi -> 5b:technologi
+announced      input:announced -> 1a:announced -> 1b:announc -> 1c:announc -> 2:announc -> 3:announc -> 4:announc -> 5a:announc -> 5b:announc
+winning        input:winning -> 1a:winning -> 1b:win -> 1c:win -> 2:win -> 3:win -> 4:win -> 5a:win -> 5b:win
+universities   input:universities -> 1a:universiti -> 1b:universiti -> 1c:universiti -> 2:universiti -> 3:universiti -> 4:univers -> 5a:univers -> 5b:univers
+agreed         input:agreed -> 1a:agreed -> 1b:agree -> 1c:agree -> 2:agree -> 3:agree -> 4:agree -> 5a:agre -> 5b:agre
+feed           input:feed -> 1a:feed -> 1b:feed -> 1c:feed -> 2:feed -> 3:feed -> 4:feed -> 5a:feed -> 5b:feed

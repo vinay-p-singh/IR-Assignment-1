@@ -1,0 +1,31 @@
+qid	kind	query
+q01	simple	oil
+q02	simple	election
+q03	simple	broadband
+q04	simple	chelsea
+q05	simple	oscar
+q06	simple	economy
+q07	simple	software
+q08	simple	album
+q09	boolean	oil AND price
+q10	boolean	mobile AND phone
+q11	boolean	football OR rugby
+q12	boolean	(oil OR gas) AND prices
+q13	boolean	government AND economy
+q14	boolean	(microsoft OR apple) AND software
+q15	boolean	shares AND profits
+q16	boolean	election AND labour
+q17	boolean	(chelsea OR arsenal) AND league
+q18	boolean	digital AND music
+q19	boolean	internet AND security
+q20	boolean	film AND awards
+q21	negation	bank AND NOT football
+q22	negation	music AND NOT film
+q23	negation	minister AND NOT chelsea
+q24	morphological	investment
+q25	morphological	manager
+q26	morphological	technology
+q27	morphological	players
+q28	morphological	announced
+q29	morphological	computing
+q30	morphological	winning

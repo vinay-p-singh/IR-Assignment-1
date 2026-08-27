@@ -1,0 +1,12 @@
+{
+  "num_docs": 2225,
+  "raw_bytes": 5041385,
+  "total_whitespace_tokens": 854490,
+  "unique_whitespace_types": 65553,
+  "doc_length": {
+    "min": 89,
+    "median": 332,
+    "max": 4432,
+    "mean": 384.04
+  }
+}

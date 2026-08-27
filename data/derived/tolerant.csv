@@ -1,0 +1,21 @@
+qid,base_qid,corruption,misspelled_query,repaired_query,corrections,exact_results,tolerant_results,relevant,exact_precision,exact_recall,tolerant_precision,tolerant_recall
+m01,q01,doubling,oill,oil,oill->oil,0,110,109,0.0,0.0,0.9909,1.0
+m02,q02,omission,electon,election,electon->election,0,237,218,0.0,0.0,0.9072,0.9862
+m03,q03,omission,brodband,broadband,brodband->broadband,0,72,72,0.0,0.0,1.0,1.0
+m04,q04,transposition,chelsae,chelsea,chelsae->chelsea,0,68,69,0.0,0.0,1.0,0.9855
+m05,q05,substitution,oscer,oscar,oscer->oscar,0,68,75,0.0,0.0,0.8529,0.7733
+m06,q06,omission,ecnomy,economy,ecnomy->economy,0,200,195,0.0,0.0,0.965,0.9897
+m07,q07,substitution,softwear,software,softwear->software,0,135,135,0.0,0.0,1.0,1.0
+m08,q08,doubling,albbum,album,albbum->album,0,78,68,0.0,0.0,0.8718,1.0
+m09,q09,transposition,oil AND pirce,oil AND piece,pirce->piece,0,0,25,0.0,0.0,0.0,0.0
+m10,q10,transposition,moblie AND phone,mobile AND phone,moblie->mobile,0,102,83,0.0,0.0,0.8137,1.0
+m11,q11,substitution,futball OR rugby,football OR rugby,futball->football,74,176,180,1.0,0.4111,0.9716,0.95
+m12,q12,doubling,(oil OR gass) AND prices,(oil OR gas) AND prices,gass->gas,63,64,56,0.873,0.9821,0.875,1.0
+m13,q13,omission,goverment AND economy,government AND economy,goverment->government,0,111,110,0.0,0.0,0.9369,0.9455
+m14,q14,omission,(microsft OR apple) AND software,(microsoft OR apple) AND software,microsft->microsoft,15,52,54,1.0,0.2778,1.0,0.963
+m15,q15,transposition,sahres AND profits,sales AND profits,sahres->sales,0,62,37,0.0,0.0,0.3065,0.5135
+m16,q16,transposition,election AND labuor,election AND labor,labuor->labor,0,4,147,0.0,0.0,0.0,0.0
+m17,q18,transposition,digital AND musci,digital AND music,musci->music,0,83,81,0.0,0.0,0.9759,1.0
+m18,q19,doubling,internett AND security,internet AND security,internett->internet,0,34,27,0.0,0.0,0.7941,1.0
+m19,q20,omission,film AND awrds,film AND awards,awrds->awards,0,98,74,0.0,0.0,0.7551,1.0
+m20,q25,omission,managment,management,managment->management,343,343,350,1.0,0.98,1.0,0.98
