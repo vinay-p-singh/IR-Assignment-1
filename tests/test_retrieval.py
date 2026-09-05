@@ -2,7 +2,7 @@ import pathlib
 
 import pytest
 
-from ir import boolean, evaluate, preprocess, tolerant
+from ir import boolean, evaluate, morphology, preprocess, tolerant
 from ir.corpus import load_corpus
 from ir.index import InvertedIndex
 from ir.queryset import MISSPELLED, QUERIES, build_qrels
@@ -60,6 +60,44 @@ def test_case_normalization_collides_us_with_stopword():
     assert "us" not in preprocess.stop_words()
     assert preprocess.NOSTOP("US investors") == ["us", "investors"]
     assert preprocess.NOSTOP("between us") == ["us"]
+
+
+def test_lemmatizer_is_pos_aware():
+    """Without a tag NLTK assumes every word is a noun and verbs pass through.
+
+    That default is what makes an untagged 'lemmatized' index little more than
+    plural stripping, and it would make the stemming-vs-lemmatization
+    comparison meaningless.
+    """
+    assert preprocess._cached_lemma("announced") == "announced"
+    assert preprocess._cached_lemma("announced", "v") == "announce"
+    tagged = preprocess.lemmatize_tokens(
+        ["they", "announced", "the", "bids"]
+    )
+    assert tagged == ["they", "announce", "the", "bid"]
+
+
+def test_lemmatizer_keeps_irregular_forms_the_stemmer_misses():
+    assert preprocess.context_free_lemma("children") == "child"
+    assert preprocess.context_free_lemma("mice") == "mouse"
+    assert preprocess.context_free_lemma("was") == "be"
+    assert preprocess._cached_stem("children") == "children"
+
+
+def test_context_free_lemma_leaves_known_lemmas_alone():
+    """'news' is a noun in its own right, not the plural of 'new'."""
+    assert preprocess.context_free_lemma("news") == "news"
+    assert preprocess.context_free_lemma("analysis") == "analysis"
+
+
+def test_morphology_probes_report_both_failure_modes():
+    rows = morphology.probe_rows()
+    verdicts = {r["verdict"] for r in rows}
+    assert any("over-stemming" in v for v in verdicts)
+    assert any("under-stemming" in v for v in verdicts)
+    assert morphology.undesirable(rows), "expected at least one bad transformation"
+    communism = next(r for r in rows if r["word_a"] == "communism")
+    assert communism["same_stem"] == "yes" and communism["same_lemma"] == "no"
 
 
 # -------------------------------------------------------------------- index
@@ -197,6 +235,45 @@ def test_wildcard_superset_of_exact(kgram, stemmed):
 def test_wildcard_middle(kgram):
     for match in kgram.wildcard("gov*ment"):
         assert match.startswith("gov") and match.endswith("ment")
+
+
+def test_wildcard_parses_as_its_own_node():
+    node = boolean.parse("comput* AND security")
+    assert isinstance(node.children[0], boolean.Wildcard)
+    assert node.children[0].pattern == "comput*"
+    with pytest.raises(boolean.QuerySyntaxError):
+        boolean.parse("* AND security")
+
+
+def test_wildcard_without_an_expander_is_rejected(stemmed, normalize):
+    """The '*' must never be silently discarded.
+
+    Dropping it turns 'comput*' into a lookup for the literal term 'comput',
+    which is not in the dictionary, so the query would return zero documents
+    and look like a legitimate empty result rather than a mistake.
+    """
+    with pytest.raises(boolean.QuerySyntaxError):
+        boolean.execute("comput* AND security", stemmed, normalize)
+
+
+def test_wildcard_query_dominates_the_literal_prefix(kgram, stemmed, normalize):
+    """'invest*' also reaches investigate/investigation, which stem elsewhere."""
+    expanded, _ = boolean.execute(
+        "invest* AND NOT football", stemmed, normalize, expand=kgram.wildcard
+    )
+    exact, _ = boolean.execute("investment AND NOT football", stemmed, normalize)
+    assert set(exact) < set(expanded)
+
+
+def test_wildcard_strategies_agree(kgram, stemmed, normalize):
+    for query in ["comput* AND security", "invest* AND NOT football"]:
+        naive, _ = boolean.execute(
+            query, stemmed, normalize, optimize=False, expand=kgram.wildcard
+        )
+        opt, _ = boolean.execute(
+            query, stemmed, normalize, optimize=True, expand=kgram.wildcard
+        )
+        assert set(naive) == set(opt)
 
 
 def test_correction_repairs_a_clear_misspelling(kgram):

@@ -1,0 +1,7 @@
+shape,queries,naive_comparisons,optimized_comparisons,saving_pct
+2 term AND,40,12102,12102,0.0
+3+ term AND,15,12049,10382,13.84
+OR only,5,805,805,0.0
+contains NOT,15,61110,4969,91.87
+mixed AND/OR,15,4005,4005,0.0
+single term,75,0,0,0.0

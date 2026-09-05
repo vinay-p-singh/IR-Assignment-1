@@ -1,0 +1,5 @@
+query,expanded_results,results_if_star_ignored,extra_documents,merge_order,comparisons
+comput* AND security,51,51,0,comput*[10 terms](189) secur(283),1467
+invest* AND NOT football,313,151,162,invest*[5 terms](333) footbal(114),1208
+(broadband OR mobile) AND *phone,121,115,6,broadband(72) mobil(132) *phone[10 terms](184),984
+elect* AND labour,151,148,3,labour(227) elect*[15 terms](350),2438

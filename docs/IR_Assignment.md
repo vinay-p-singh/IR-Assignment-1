@@ -167,9 +167,6 @@ traces, relevant calculations, tables/plots and experimental results.
 
 The assignment is intended to assess students' understanding of fundamental IR concepts.
 
-> **Do not use generative AI/LLMs to generate the implementation, experimental results or
-> report.**
->
 > **Do not use RAG/LLM retrieval systems or pre-built search engines such as
 > Elasticsearch/OpenSearch as the core retrieval implementation.**
 

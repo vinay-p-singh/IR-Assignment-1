@@ -1,67 +1,67 @@
 {
   "raw": {
-    "num_queries": 30,
+    "num_queries": 33,
     "macro": {
-      "precision": 0.8663,
-      "recall": 0.6436,
-      "f1": 0.7032
+      "precision": 0.8482,
+      "recall": 0.6343,
+      "f1": 0.6929
     },
     "micro": {
       "precision": 0.9993,
-      "recall": 0.5886,
-      "f1": 0.7409
+      "recall": 0.5797,
+      "f1": 0.7337
     }
   },
   "normalized": {
-    "num_queries": 30,
+    "num_queries": 33,
     "macro": {
       "precision": 1.0,
-      "recall": 0.8686,
-      "f1": 0.9044
+      "recall": 0.8756,
+      "f1": 0.9104
     },
     "micro": {
       "precision": 1.0,
-      "recall": 0.7171,
-      "f1": 0.8352
+      "recall": 0.7199,
+      "f1": 0.8371
     }
   },
   "nostop": {
-    "num_queries": 30,
+    "num_queries": 33,
     "macro": {
       "precision": 1.0,
-      "recall": 0.8686,
-      "f1": 0.9044
+      "recall": 0.8756,
+      "f1": 0.9104
     },
     "micro": {
       "precision": 1.0,
-      "recall": 0.7171,
-      "f1": 0.8352
+      "recall": 0.7199,
+      "f1": 0.8371
     }
   },
   "stemmed": {
-    "num_queries": 30,
+    "num_queries": 33,
     "macro": {
-      "precision": 0.906,
-      "recall": 0.9564,
-      "f1": 0.9197
+      "precision": 0.9028,
+      "recall": 0.9554,
+      "f1": 0.9178
     },
     "micro": {
-      "precision": 0.9385,
-      "recall": 0.8957,
-      "f1": 0.9166
+      "precision": 0.9371,
+      "recall": 0.8952,
+      "f1": 0.9156
     }
   },
   "lemmatized": {
-    "num_queries": 30,
+    "num_queries": 33,
     "macro": {
-      "precision": 0.9204,
-      "recall": 0.8764,
-      "f1": 0.865
+      "precision": 0.914,
+      "recall": 0.9035,
+      "f1": 0.8834
     },
     "micro": {
-      "precision": 0.9414,
-      "recall": 0.7423,
-      "f1": 0.8301
+      "precision": 0.919,
+      "recall": 0.817,
+      "f1": 0.865
     }
   }
 }

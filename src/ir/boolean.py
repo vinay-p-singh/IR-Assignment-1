@@ -7,6 +7,11 @@ Two execution strategies are provided so the report can compare them:
 
 Both must return identical result sets. That equality is the correctness gate;
 the comparison counts and timings are only meaningful once it holds.
+
+A term may also be a wildcard pattern such as 'comput*'. Expanding one needs the
+k-gram index, which this module does not own, so execute() takes an optional
+`expand` callback. Without it a wildcard is a syntax error rather than a
+silently ignored '*'.
 """
 
 import re
@@ -25,6 +30,11 @@ class Term:
 
 
 @dataclass(frozen=True)
+class Wildcard:
+    pattern: str
+
+
+@dataclass(frozen=True)
 class Not:
     child: "Node"
 
@@ -39,11 +49,11 @@ class Or:
     children: tuple["Node", ...]
 
 
-Node = Term | Not | And | Or
+Node = Term | Wildcard | Not | And | Or
 
 # ---------------------------------------------------------------- parsing
 
-_QUERY_TOKEN_RE = re.compile(r"\(|\)|[A-Za-z0-9]+(?:['\-][A-Za-z0-9]+)*")
+_QUERY_TOKEN_RE = re.compile(r"\(|\)|[A-Za-z0-9*]+(?:['\-][A-Za-z0-9*]+)*")
 _OPERATORS = {"AND", "OR", "NOT"}
 
 
@@ -121,6 +131,10 @@ class _Parser:
             raise QuerySyntaxError("unbalanced closing parenthesis")
         if tok.upper() in _OPERATORS:
             raise QuerySyntaxError(f"operator {tok!r} used as a term")
+        if "*" in tok:
+            if tok.strip("*") == "":
+                raise QuerySyntaxError(f"wildcard {tok!r} has no literal characters")
+            return Wildcard(tok.lower())
         return Term(tok)
 
 
@@ -196,6 +210,7 @@ def difference(a: list[int], b: list[int], stats: QueryStats) -> list[int]:
 # ---------------------------------------------------------------- evaluation
 
 TermNormalizer = Callable[[str], str]
+WildcardExpander = Callable[[str], list[str]]
 
 
 def _normalized_postings(
@@ -208,21 +223,65 @@ def _normalized_postings(
     return postings
 
 
+def _wildcard_terms(
+    node: Wildcard, normalize: TermNormalizer, expand: WildcardExpander | None
+) -> list[str]:
+    """Surface forms matching the pattern, mapped into the index's term space.
+
+    Refusing to run without an expander is deliberate. Silently ignoring the
+    '*' would turn 'comput*' into a lookup for the literal term 'comput' and
+    return a confidently wrong answer.
+    """
+    if expand is None:
+        raise QuerySyntaxError(
+            f"wildcard {node.pattern!r} needs a k-gram expander; "
+            "pass expand=... to execute()"
+        )
+    return sorted({normalize(surface) for surface in expand(node.pattern)})
+
+
+def _wildcard_postings(
+    node: Wildcard,
+    index: InvertedIndex,
+    normalize: TermNormalizer,
+    stats: QueryStats,
+    expand: WildcardExpander | None,
+) -> list[int]:
+    terms = _wildcard_terms(node, normalize, expand)
+    result: list[int] = []
+    for term in terms:
+        postings = index.postings(term)
+        stats.postings_touched += len(postings)
+        result = union(result, postings, stats)
+    stats.order.append(f"{node.pattern}[{len(terms)} terms]({len(result)})")
+    return result
+
+
 def _estimated_size(
-    node: Node, index: InvertedIndex, normalize: TermNormalizer
+    node: Node,
+    index: InvertedIndex,
+    normalize: TermNormalizer,
+    expand: WildcardExpander | None = None,
 ) -> int:
     """Cheap size prediction used to order AND arguments."""
     match node:
         case Term(value):
             return index.df(normalize(value))
+        case Wildcard():
+            return min(
+                index.num_docs,
+                sum(index.df(t) for t in _wildcard_terms(node, normalize, expand)),
+            )
         case Not(child):
-            return index.num_docs - _estimated_size(child, index, normalize)
+            return index.num_docs - _estimated_size(child, index, normalize, expand)
         case And(children):
-            return min(_estimated_size(c, index, normalize) for c in children)
+            return min(
+                _estimated_size(c, index, normalize, expand) for c in children
+            )
         case Or(children):
             return min(
                 index.num_docs,
-                sum(_estimated_size(c, index, normalize) for c in children),
+                sum(_estimated_size(c, index, normalize, expand) for c in children),
             )
     raise TypeError(f"unknown node {node!r}")
 
@@ -233,20 +292,26 @@ def _evaluate(
     normalize: TermNormalizer,
     stats: QueryStats,
     optimize: bool,
+    expand: WildcardExpander | None = None,
 ) -> list[int]:
     match node:
         case Term():
             return _normalized_postings(node, index, normalize, stats)
 
+        case Wildcard():
+            return _wildcard_postings(node, index, normalize, stats, expand)
+
         case Not(child):
-            inner = _evaluate(child, index, normalize, stats, optimize)
+            inner = _evaluate(child, index, normalize, stats, optimize, expand)
             return difference(index.all_doc_ids, inner, stats)
 
         case Or(children):
-            result = _evaluate(children[0], index, normalize, stats, optimize)
+            result = _evaluate(children[0], index, normalize, stats, optimize, expand)
             for child in children[1:]:
                 result = union(
-                    result, _evaluate(child, index, normalize, stats, optimize), stats
+                    result,
+                    _evaluate(child, index, normalize, stats, optimize, expand),
+                    stats,
                 )
             return result
 
@@ -259,20 +324,20 @@ def _evaluate(
                 ordered.sort(
                     key=lambda c: (
                         isinstance(c, Not),
-                        _estimated_size(c, index, normalize),
+                        _estimated_size(c, index, normalize, expand),
                     )
                 )
-            result = _evaluate(ordered[0], index, normalize, stats, optimize)
+            result = _evaluate(ordered[0], index, normalize, stats, optimize, expand)
             for child in ordered[1:]:
                 if optimize and isinstance(child, Not):
                     excluded = _evaluate(
-                        child.child, index, normalize, stats, optimize
+                        child.child, index, normalize, stats, optimize, expand
                     )
                     result = difference(result, excluded, stats)
                 else:
                     result = intersect(
                         result,
-                        _evaluate(child, index, normalize, stats, optimize),
+                        _evaluate(child, index, normalize, stats, optimize, expand),
                         stats,
                     )
                 if not result:
@@ -287,11 +352,12 @@ def execute(
     index: InvertedIndex,
     normalize: TermNormalizer,
     optimize: bool = False,
+    expand: WildcardExpander | None = None,
 ) -> tuple[list[int], QueryStats]:
     node = parse(query)
     stats = QueryStats()
     start = time.perf_counter()
-    result = _evaluate(node, index, normalize, stats, optimize)
+    result = _evaluate(node, index, normalize, stats, optimize, expand)
     stats.elapsed_ms = (time.perf_counter() - start) * 1000
     return result, stats
 
@@ -301,6 +367,8 @@ def render(node: Node) -> str:
     match node:
         case Term(value):
             return value
+        case Wildcard(pattern):
+            return pattern
         case Not(child):
             return f"NOT {render(child)}"
         case And(children):
@@ -324,6 +392,8 @@ def all_terms(node: Node) -> Iterable[str]:
     match node:
         case Term(value):
             yield value
+        case Wildcard():
+            return
         case Not(child):
             yield from all_terms(child)
         case And(children) | Or(children):

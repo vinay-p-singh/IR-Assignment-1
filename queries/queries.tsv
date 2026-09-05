@@ -29,3 +29,6 @@ q27	morphological	players
 q28	morphological	announced
 q29	morphological	computing
 q30	morphological	winning
+q31	boolean	market AND prices AND oil AND gas
+q32	boolean	government AND minister AND election AND labour
+q33	boolean	film AND music AND awards

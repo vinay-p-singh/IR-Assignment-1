@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IR Chat — Boolean retrieval over the BBC corpus</title>
+<script>
+  (() => {
+    const stored = localStorage.getItem("irChatTheme");
+    const theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="dot"></span>
+    <h1>IR Chat</h1>
+    <span class="sub" id="corpusLabel">loading…</span>
+  </div>
+  <div class="controls">
+    <label class="field">
+      <span>Index</span>
+      <select id="indexSelect"></select>
+    </label>
+    <button id="themeToggle" class="ghost" type="button" title="Toggle theme">◐</button>
+  </div>
+</header>
+
+<main class="layout">
+  <aside class="sidebar">
+    <h2>Commands</h2>
+    <div class="quick" id="quick"></div>
+    <h2>Benchmark</h2>
+    <div class="quick">
+      <button class="chip" data-send=":queries">list 30 queries</button>
+      <button class="chip" data-send=":eval all">score all queries</button>
+      <button class="chip" data-send=":eval q24">score q24 (morphology)</button>
+    </div>
+    <h2>How validation works</h2>
+    <p class="note">
+      Every plain query is answered twice: once through the inverted index, and
+      once by scanning the raw articles with whole-word matching. The second is
+      the oracle. Precision and recall between them measure what preprocessing
+      did — recall above the oracle is morphological matching, not a bug.
+    </p>
+    <h2>Boolean vs free text</h2>
+    <p class="note">
+      Capitalised AND, OR, NOT (or brackets) mean strict Boolean: every term is
+      mandatory. Anything else is read as free text, and stop words are dropped
+      before the search. When an AND finds nothing you get a term-by-term
+      diagnosis and the closest partial matches.
+    </p>
+  </aside>
+
+  <section class="chat">
+    <div id="transcript" class="transcript" aria-live="polite"></div>
+    <form id="composer" class="composer" autocomplete="off">
+      <input id="input" type="text" placeholder="oil AND price   ·   :compare (oil OR gas) AND prices   ·   :help" aria-label="Query">
+      <button type="submit" id="send">Run</button>
+    </form>
+  </section>
+</main>
+
+<dialog id="docModal" class="doc-modal">
+  <header><strong id="docTitle"></strong><button id="docClose" class="ghost" type="button">✕</button></header>
+  <pre id="docBody"></pre>
+</dialog>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

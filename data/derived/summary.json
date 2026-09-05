@@ -1,5 +1,9 @@
 {
   "corpus": {
+    "dataset": "BBC News full-text corpus",
+    "domain": "news (single domain, five sub-topics)",
+    "source": "UCD Machine Learning Group - http://mlg.ucd.ie/datasets/bbc.html",
+    "attribution": "D. Greene and P. Cunningham, 'Practical Solutions to the Problem of Diagonal Dominance in Kernel Document Clustering', Proc. ICML 2006.",
     "num_docs": 2225,
     "raw_bytes": 5041385,
     "total_whitespace_tokens": 854490,
@@ -10,6 +14,21 @@
       "max": 4432,
       "mean": 384.04
     }
+  },
+  "dataset": {
+    "name": "BBC News full-text corpus",
+    "domain": "news (single domain, five sub-topics)",
+    "source": "UCD Machine Learning Group - http://mlg.ucd.ie/datasets/bbc.html",
+    "download": "http://mlg.ucd.ie/files/datasets/bbc-fulltext.zip",
+    "attribution": "D. Greene and P. Cunningham, 'Practical Solutions to the Problem of Diagonal Dominance in Kernel Document Clustering', Proc. ICML 2006.",
+    "licence": "Article content copyright BBC; released for non-commercial research use only.",
+    "categories": [
+      "business",
+      "entertainment",
+      "politics",
+      "sport",
+      "tech"
+    ]
   },
   "categories": {
     "business": 510,
@@ -58,80 +77,242 @@
     {
       "index": "lemmatized",
       "num_docs": 2225,
-      "vocabulary_size": 30821,
-      "total_postings": 346890,
-      "total_tokens": 497333,
-      "hapax_legomena": 11687,
-      "mean_df": 11.255
+      "vocabulary_size": 28764,
+      "total_postings": 337183,
+      "total_tokens": 497275,
+      "hapax_legomena": 11282,
+      "mean_df": 11.722
     }
   ],
   "evaluation": {
     "raw": {
-      "num_queries": 30,
+      "num_queries": 33,
       "macro": {
-        "precision": 0.8663,
-        "recall": 0.6436,
-        "f1": 0.7032
+        "precision": 0.8482,
+        "recall": 0.6343,
+        "f1": 0.6929
       },
       "micro": {
         "precision": 0.9993,
-        "recall": 0.5886,
-        "f1": 0.7409
+        "recall": 0.5797,
+        "f1": 0.7337
       }
     },
     "normalized": {
-      "num_queries": 30,
+      "num_queries": 33,
       "macro": {
         "precision": 1.0,
-        "recall": 0.8686,
-        "f1": 0.9044
+        "recall": 0.8756,
+        "f1": 0.9104
       },
       "micro": {
         "precision": 1.0,
-        "recall": 0.7171,
-        "f1": 0.8352
+        "recall": 0.7199,
+        "f1": 0.8371
       }
     },
     "nostop": {
-      "num_queries": 30,
+      "num_queries": 33,
       "macro": {
         "precision": 1.0,
-        "recall": 0.8686,
-        "f1": 0.9044
+        "recall": 0.8756,
+        "f1": 0.9104
       },
       "micro": {
         "precision": 1.0,
-        "recall": 0.7171,
-        "f1": 0.8352
+        "recall": 0.7199,
+        "f1": 0.8371
       }
     },
     "stemmed": {
-      "num_queries": 30,
+      "num_queries": 33,
       "macro": {
-        "precision": 0.906,
-        "recall": 0.9564,
-        "f1": 0.9197
+        "precision": 0.9028,
+        "recall": 0.9554,
+        "f1": 0.9178
       },
       "micro": {
-        "precision": 0.9385,
-        "recall": 0.8957,
-        "f1": 0.9166
+        "precision": 0.9371,
+        "recall": 0.8952,
+        "f1": 0.9156
       }
     },
     "lemmatized": {
-      "num_queries": 30,
+      "num_queries": 33,
       "macro": {
-        "precision": 0.9204,
-        "recall": 0.8764,
-        "f1": 0.865
+        "precision": 0.914,
+        "recall": 0.9035,
+        "f1": 0.8834
       },
       "micro": {
-        "precision": 0.9414,
-        "recall": 0.7423,
-        "f1": 0.8301
+        "precision": 0.919,
+        "recall": 0.817,
+        "f1": 0.865
       }
     }
   },
+  "evaluation_by_kind": [
+    {
+      "index": "lemmatized",
+      "kind": "boolean",
+      "queries": 15,
+      "precision": 0.8679,
+      "recall": 0.9759,
+      "f1": 0.9073
+    },
+    {
+      "index": "lemmatized",
+      "kind": "morphological",
+      "queries": 7,
+      "precision": 0.9725,
+      "recall": 0.6556,
+      "f1": 0.7291
+    },
+    {
+      "index": "lemmatized",
+      "kind": "negation",
+      "queries": 3,
+      "precision": 0.895,
+      "recall": 0.9554,
+      "f1": 0.9202
+    },
+    {
+      "index": "lemmatized",
+      "kind": "simple",
+      "queries": 8,
+      "precision": 0.9563,
+      "recall": 0.9652,
+      "f1": 0.9599
+    },
+    {
+      "index": "normalized",
+      "kind": "boolean",
+      "queries": 15,
+      "precision": 1.0,
+      "recall": 0.9759,
+      "f1": 0.9873
+    },
+    {
+      "index": "normalized",
+      "kind": "morphological",
+      "queries": 7,
+      "precision": 1.0,
+      "recall": 0.5137,
+      "f1": 0.6319
+    },
+    {
+      "index": "normalized",
+      "kind": "negation",
+      "queries": 3,
+      "precision": 1.0,
+      "recall": 0.9867,
+      "f1": 0.9933
+    },
+    {
+      "index": "normalized",
+      "kind": "simple",
+      "queries": 8,
+      "precision": 1.0,
+      "recall": 0.9624,
+      "f1": 0.9789
+    },
+    {
+      "index": "nostop",
+      "kind": "boolean",
+      "queries": 15,
+      "precision": 1.0,
+      "recall": 0.9759,
+      "f1": 0.9873
+    },
+    {
+      "index": "nostop",
+      "kind": "morphological",
+      "queries": 7,
+      "precision": 1.0,
+      "recall": 0.5137,
+      "f1": 0.6319
+    },
+    {
+      "index": "nostop",
+      "kind": "negation",
+      "queries": 3,
+      "precision": 1.0,
+      "recall": 0.9867,
+      "f1": 0.9933
+    },
+    {
+      "index": "nostop",
+      "kind": "simple",
+      "queries": 8,
+      "precision": 1.0,
+      "recall": 0.9624,
+      "f1": 0.9789
+    },
+    {
+      "index": "raw",
+      "kind": "boolean",
+      "queries": 15,
+      "precision": 0.8,
+      "recall": 0.6304,
+      "f1": 0.6767
+    },
+    {
+      "index": "raw",
+      "kind": "morphological",
+      "queries": 7,
+      "precision": 1.0,
+      "recall": 0.5009,
+      "f1": 0.6222
+    },
+    {
+      "index": "raw",
+      "kind": "negation",
+      "queries": 3,
+      "precision": 0.9966,
+      "recall": 0.71,
+      "f1": 0.8138
+    },
+    {
+      "index": "raw",
+      "kind": "simple",
+      "queries": 8,
+      "precision": 0.75,
+      "recall": 0.73,
+      "f1": 0.7398
+    },
+    {
+      "index": "stemmed",
+      "kind": "boolean",
+      "queries": 15,
+      "precision": 0.8414,
+      "recall": 0.9759,
+      "f1": 0.8909
+    },
+    {
+      "index": "stemmed",
+      "kind": "morphological",
+      "queries": 7,
+      "precision": 1.0,
+      "recall": 0.8993,
+      "f1": 0.9379
+    },
+    {
+      "index": "stemmed",
+      "kind": "negation",
+      "queries": 3,
+      "precision": 0.8609,
+      "recall": 0.953,
+      "f1": 0.9017
+    },
+    {
+      "index": "stemmed",
+      "kind": "simple",
+      "queries": 8,
+      "precision": 0.9485,
+      "recall": 0.9669,
+      "f1": 0.9566
+    }
+  ],
   "tolerant": {
     "exact": {
       "num_queries": 20,
@@ -161,10 +342,265 @@
     }
   },
   "comparisons": {
-    "naive_total": 77943,
-    "optimized_total": 21790,
-    "saving_pct": 72.04
+    "naive_total": 90071,
+    "optimized_total": 32263,
+    "saving_pct": 64.18,
+    "timing_repeats": 9,
+    "by_shape": [
+      {
+        "shape": "2 term AND",
+        "queries": 40,
+        "naive_comparisons": 12102,
+        "optimized_comparisons": 12102,
+        "saving_pct": 0.0
+      },
+      {
+        "shape": "3+ term AND",
+        "queries": 15,
+        "naive_comparisons": 12049,
+        "optimized_comparisons": 10382,
+        "saving_pct": 13.84
+      },
+      {
+        "shape": "OR only",
+        "queries": 5,
+        "naive_comparisons": 805,
+        "optimized_comparisons": 805,
+        "saving_pct": 0.0
+      },
+      {
+        "shape": "contains NOT",
+        "queries": 15,
+        "naive_comparisons": 61110,
+        "optimized_comparisons": 4969,
+        "saving_pct": 91.87
+      },
+      {
+        "shape": "mixed AND/OR",
+        "queries": 15,
+        "naive_comparisons": 4005,
+        "optimized_comparisons": 4005,
+        "saving_pct": 0.0
+      },
+      {
+        "shape": "single term",
+        "queries": 75,
+        "naive_comparisons": 0,
+        "optimized_comparisons": 0,
+        "saving_pct": 0.0
+      }
+    ]
   },
+  "morphology_probes": [
+    {
+      "word_a": "communism",
+      "word_b": "community",
+      "should_merge": "no",
+      "stem_a": "commun",
+      "stem_b": "commun",
+      "same_stem": "yes",
+      "lemma_a": "communism",
+      "lemma_b": "community",
+      "same_lemma": "no",
+      "verdict": "over-stemming: only the stemmer merges",
+      "note": "political system vs social group"
+    },
+    {
+      "word_a": "organisation",
+      "word_b": "organ",
+      "should_merge": "no",
+      "stem_a": "organis",
+      "stem_b": "organ",
+      "same_stem": "no",
+      "lemma_a": "organisation",
+      "lemma_b": "organ",
+      "same_lemma": "no",
+      "verdict": "both keep apart (wanted)",
+      "note": "institution vs body part"
+    },
+    {
+      "word_a": "university",
+      "word_b": "universe",
+      "should_merge": "no",
+      "stem_a": "univers",
+      "stem_b": "univers",
+      "same_stem": "yes",
+      "lemma_a": "university",
+      "lemma_b": "universe",
+      "same_lemma": "no",
+      "verdict": "over-stemming: only the stemmer merges",
+      "note": "institution vs cosmos"
+    },
+    {
+      "word_a": "generic",
+      "word_b": "generation",
+      "should_merge": "no",
+      "stem_a": "gener",
+      "stem_b": "gener",
+      "same_stem": "yes",
+      "lemma_a": "generic",
+      "lemma_b": "generation",
+      "same_lemma": "no",
+      "verdict": "over-stemming: only the stemmer merges",
+      "note": "unspecific vs a cohort of people"
+    },
+    {
+      "word_a": "dominance",
+      "word_b": "dominic",
+      "should_merge": "no",
+      "stem_a": "domin",
+      "stem_b": "domin",
+      "same_stem": "yes",
+      "lemma_a": "dominance",
+      "lemma_b": "dominic",
+      "same_lemma": "no",
+      "verdict": "over-stemming: only the stemmer merges",
+      "note": "abstract noun vs a personal name"
+    },
+    {
+      "word_a": "news",
+      "word_b": "new",
+      "should_merge": "no",
+      "stem_a": "new",
+      "stem_b": "new",
+      "same_stem": "yes",
+      "lemma_a": "news",
+      "lemma_b": "new",
+      "same_lemma": "no",
+      "verdict": "over-stemming: only the stemmer merges",
+      "note": "reports vs the adjective"
+    },
+    {
+      "word_a": "policy",
+      "word_b": "police",
+      "should_merge": "no",
+      "stem_a": "polici",
+      "stem_b": "polic",
+      "same_stem": "no",
+      "lemma_a": "policy",
+      "lemma_b": "police",
+      "same_lemma": "no",
+      "verdict": "both keep apart (wanted)",
+      "note": "a plan vs a law-enforcement body"
+    },
+    {
+      "word_a": "marketing",
+      "word_b": "market",
+      "should_merge": "yes",
+      "stem_a": "market",
+      "stem_b": "market",
+      "same_stem": "yes",
+      "lemma_a": "market",
+      "lemma_b": "market",
+      "same_lemma": "yes",
+      "verdict": "both merge (wanted)",
+      "note": "same commercial sense; merging is wanted"
+    },
+    {
+      "word_a": "mice",
+      "word_b": "mouse",
+      "should_merge": "yes",
+      "stem_a": "mice",
+      "stem_b": "mous",
+      "same_stem": "no",
+      "lemma_a": "mouse",
+      "lemma_b": "mouse",
+      "same_lemma": "yes",
+      "verdict": "under-stemming: only the lemmatizer merges",
+      "note": "irregular plural"
+    },
+    {
+      "word_a": "ran",
+      "word_b": "run",
+      "should_merge": "yes",
+      "stem_a": "ran",
+      "stem_b": "run",
+      "same_stem": "no",
+      "lemma_a": "run",
+      "lemma_b": "run",
+      "same_lemma": "yes",
+      "verdict": "under-stemming: only the lemmatizer merges",
+      "note": "irregular past tense"
+    },
+    {
+      "word_a": "better",
+      "word_b": "good",
+      "should_merge": "yes",
+      "stem_a": "better",
+      "stem_b": "good",
+      "same_stem": "no",
+      "lemma_a": "better",
+      "lemma_b": "good",
+      "same_lemma": "no",
+      "verdict": "under-stemming: neither merges",
+      "note": "suppletive comparative"
+    },
+    {
+      "word_a": "was",
+      "word_b": "be",
+      "should_merge": "yes",
+      "stem_a": "wa",
+      "stem_b": "be",
+      "same_stem": "no",
+      "lemma_a": "be",
+      "lemma_b": "be",
+      "same_lemma": "yes",
+      "verdict": "under-stemming: only the lemmatizer merges",
+      "note": "irregular copula"
+    },
+    {
+      "word_a": "children",
+      "word_b": "child",
+      "should_merge": "yes",
+      "stem_a": "children",
+      "stem_b": "child",
+      "same_stem": "no",
+      "lemma_a": "child",
+      "lemma_b": "child",
+      "same_lemma": "yes",
+      "verdict": "under-stemming: only the lemmatizer merges",
+      "note": "irregular plural"
+    },
+    {
+      "word_a": "europe",
+      "word_b": "european",
+      "should_merge": "yes",
+      "stem_a": "europ",
+      "stem_b": "european",
+      "same_stem": "no",
+      "lemma_a": "europe",
+      "lemma_b": "european",
+      "same_lemma": "no",
+      "verdict": "under-stemming: neither merges",
+      "note": "place and its adjective"
+    },
+    {
+      "word_a": "analysis",
+      "word_b": "analyses",
+      "should_merge": "yes",
+      "stem_a": "analysi",
+      "stem_b": "analys",
+      "same_stem": "no",
+      "lemma_a": "analysis",
+      "lemma_b": "analyse",
+      "same_lemma": "no",
+      "verdict": "under-stemming: neither merges",
+      "note": "Greek-origin plural"
+    },
+    {
+      "word_a": "company",
+      "word_b": "companies",
+      "should_merge": "yes",
+      "stem_a": "compani",
+      "stem_b": "compani",
+      "same_stem": "yes",
+      "lemma_a": "company",
+      "lemma_b": "company",
+      "same_lemma": "yes",
+      "verdict": "both merge (wanted)",
+      "note": "regular y-plural"
+    }
+  ],
   "sample_postings": {
     "oil": [
       2,
@@ -344,6 +780,40 @@
       "pattern": "f*ball",
       "matches": 1,
       "sample": "football"
+    }
+  ],
+  "wildcard_queries": [
+    {
+      "query": "comput* AND security",
+      "expanded_results": 51,
+      "results_if_star_ignored": 51,
+      "extra_documents": 0,
+      "merge_order": "comput*[10 terms](189) secur(283)",
+      "comparisons": 1467
+    },
+    {
+      "query": "invest* AND NOT football",
+      "expanded_results": 313,
+      "results_if_star_ignored": 151,
+      "extra_documents": 162,
+      "merge_order": "invest*[5 terms](333) footbal(114)",
+      "comparisons": 1208
+    },
+    {
+      "query": "(broadband OR mobile) AND *phone",
+      "expanded_results": 121,
+      "results_if_star_ignored": 115,
+      "extra_documents": 6,
+      "merge_order": "broadband(72) mobil(132) *phone[10 terms](184)",
+      "comparisons": 984
+    },
+    {
+      "query": "elect* AND labour",
+      "expanded_results": 151,
+      "results_if_star_ignored": 148,
+      "extra_documents": 3,
+      "merge_order": "labour(227) elect*[15 terms](350)",
+      "comparisons": 2438
     }
   ],
   "porter_traces": {

@@ -1,4 +1,4 @@
-"""The 30 evaluation queries, their relevance rules, and 20 misspelled variants.
+"""The evaluation queries, their relevance rules, and 20 misspelled variants.
 
 Relevance judgments are defined as explicit predicates over the *raw* article
 text, using whole-word matching. Retrieval, by contrast, runs over a *processed*
@@ -171,6 +171,30 @@ QUERIES: list[Query] = [
         "winning",
         "morphological",
         word_family("win", "wins", "winning", "winner", "winners"),
+    ),
+    # ------------------------------------------------------ multi-way merges
+    # Reordering cannot help a two-term AND -- the two-pointer merge costs the
+    # same either way -- so without these the optimization experiment has
+    # nothing to reorder. Terms are written largest postings list first, which
+    # is the worst case for left-to-right evaluation and the case the optimizer
+    # is supposed to fix.
+    Query(
+        "q31",
+        "market AND prices AND oil AND gas",
+        "boolean",
+        all_of(w("market"), w("prices"), w("oil"), w("gas")),
+    ),
+    Query(
+        "q32",
+        "government AND minister AND election AND labour",
+        "boolean",
+        all_of(w("government"), w("minister"), w("election"), w("labour")),
+    ),
+    Query(
+        "q33",
+        "film AND music AND awards",
+        "boolean",
+        all_of(w("film"), w("music"), w("awards")),
     ),
 ]
 

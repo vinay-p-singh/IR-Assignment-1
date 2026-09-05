@@ -1,41 +1,41 @@
-stem,surface_forms,members,lemma_groups_covering_them
-gener,14,general generalities generally generate generated generates generating generation generations generator generators generic,11
-consult,10,consult consultancy consultant consultants consultation consultations consultative consulted consulting consults,8
-present,10,present presentable presentation presentations presented presenter presenters presenting presently presents,7
-account,9,account accountability accountable accountancy accountant accountants accounted accounting accounts,7
-collabor,9,collaborate collaborated collaborating collaboration collaborations collaborative collaboratively collaborator collaborators,7
-commun,9,communicate communicated communicating communication communications communicator communism communities community,7
-compet,9,compete competed competence competences competency competent competently competes competing,8
-depend,9,depend dependability dependable dependant dependence dependency dependent depending depends,9
-design,9,design designate designated designation designed designer designers designing designs,7
-domin,9,dominance dominant dominate dominated dominates dominating domination domineering dominic,9
-indic,9,indicate indicated indicates indicating indication indications indicative indicator indicators,7
-instal,9,instal install installation installations installed installing installs instalment instalments,7
-object,9,object objected objecting objection objections objective objectives objectivity objects,6
-oper,9,operate operated operates operating operation operational operations operator operators,7
-origin,9,origin original originality originally originals originate originated originates origins,7
-promot,9,promote promoted promoter promoters promotes promoting promotion promotional promotions,7
-protest,9,protest protestant protestants protestation protestations protested protester protesters protests,5
-respect,9,respect respectability respectable respected respecter respectful respective respectively respects,8
-adapt,8,adapt adaptation adaptations adapted adapter adapters adaptibility adapting,6
-anim,8,animal animals animate animated animation animations animator animators,5
-attend,8,attend attendance attendances attendant attendants attended attending attends,6
-celebr,8,celebrate celebrated celebrates celebrating celebration celebrations celebrities celebrity,6
-collect,8,collect collected collecting collection collections collective collectively collects,6
-command,8,command commanded commandeer commandeered commander commanders commanding commands,6
-comment,8,comment commentate commentating commentator commentators commented commenting comments,6
-continu,8,continually continuation continue continued continues continuing continuous continuously,8
-defend,8,defend defendant defendants defended defender defenders defending defends,6
-demonstr,8,demonstrate demonstrated demonstrates demonstrating demonstration demonstrations demonstrator demonstrators,6
-develop,8,develop developed developer developers developing development developments develops,6
-direct,8,direct directed directing direction directions directive directives directs,6
-expect,8,expect expectancies expectancy expectation expectations expected expecting expects,6
-import,8,import importance important imported importer importers importing imports,6
-impress,8,impress impressed impresses impressing impression impressions impressive impressively,6
-inform,8,inform informal informally informants information informative informed informing,8
-initi,8,initial initially initiate initiated initiating initiative initiatives initiator,7
-interact,8,interact interacted interacting interaction interactions interactive interactivity interacts,7
-investig,8,investigate investigated investigates investigating investigation investigations investigative investigators,7
-manag,8,manage manageable managed management manager managers manages managing,7
-measur,8,measurable measurably measure measured measurement measurements measures measuring,6
-perform,8,perform performance performances performed performer performers performing performs,6
+stem,surface_forms,members,distinct_lemmas,conflation_ratio
+gener,14,general generalities generally generate generated generates generating generation generations generator generators generic,8,1.75
+consult,10,consult consultancy consultant consultants consultation consultations consultative consulted consulting consults,5,2.0
+present,10,present presentable presentation presentations presented presenter presenters presenting presently presents,5,2.0
+account,9,account accountability accountable accountancy accountant accountants accounted accounting accounts,5,1.8
+collabor,9,collaborate collaborated collaborating collaboration collaborations collaborative collaboratively collaborator collaborators,5,1.8
+commun,9,communicate communicated communicating communication communications communicator communism communities community,6,1.5
+compet,9,compete competed competence competences competency competent competently competes competing,5,1.8
+depend,9,depend dependability dependable dependant dependence dependency dependent depending depends,7,1.29
+design,9,design designate designated designation designed designer designers designing designs,4,2.25
+domin,9,dominance dominant dominate dominated dominates dominating domination domineering dominic,6,1.5
+indic,9,indicate indicated indicates indicating indication indications indicative indicator indicators,4,2.25
+instal,9,instal install installation installations installed installing installs instalment instalments,4,2.25
+object,9,object objected objecting objection objections objective objectives objectivity objects,4,2.25
+oper,9,operate operated operates operating operation operational operations operator operators,5,1.8
+origin,9,origin original originality originally originals originate originated originates origins,5,1.8
+promot,9,promote promoted promoter promoters promotes promoting promotion promotional promotions,4,2.25
+protest,9,protest protestant protestants protestation protestations protested protester protesters protests,4,2.25
+respect,9,respect respectability respectable respected respecter respectful respective respectively respects,7,1.29
+adapt,8,adapt adaptation adaptations adapted adapter adapters adaptibility adapting,4,2.0
+anim,8,animal animals animate animated animation animations animator animators,4,2.0
+attend,8,attend attendance attendances attendant attendants attended attending attends,3,2.67
+celebr,8,celebrate celebrated celebrates celebrating celebration celebrations celebrities celebrity,3,2.67
+collect,8,collect collected collecting collection collections collective collectively collects,4,2.0
+command,8,command commanded commandeer commandeered commander commanders commanding commands,3,2.67
+comment,8,comment commentate commentating commentator commentators commented commenting comments,3,2.67
+continu,8,continually continuation continue continued continues continuing continuous continuously,5,1.6
+defend,8,defend defendant defendants defended defender defenders defending defends,3,2.67
+demonstr,8,demonstrate demonstrated demonstrates demonstrating demonstration demonstrations demonstrator demonstrators,3,2.67
+develop,8,develop developed developer developers developing development developments develops,3,2.67
+direct,8,direct directed directing direction directions directive directives directs,3,2.67
+expect,8,expect expectancies expectancy expectation expectations expected expecting expects,3,2.67
+import,8,import importance important imported importer importers importing imports,4,2.0
+impress,8,impress impressed impresses impressing impression impressions impressive impressively,4,2.0
+inform,8,inform informal informally informants information informative informed informing,6,1.33
+initi,8,initial initially initiate initiated initiating initiative initiatives initiator,5,1.6
+interact,8,interact interacted interacting interaction interactions interactive interactivity interacts,4,2.0
+investig,8,investigate investigated investigates investigating investigation investigations investigative investigators,4,2.0
+manag,8,manage manageable managed management manager managers manages managing,4,2.0
+measur,8,measurable measurably measure measured measurement measurements measures measuring,4,2.0
+perform,8,perform performance performances performed performer performers performing performs,3,2.67

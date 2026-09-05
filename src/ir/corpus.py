@@ -10,6 +10,24 @@ import statistics
 from dataclasses import dataclass
 from pathlib import Path
 
+# Assignment section 2 requires source, attribution and domain to be reported.
+# They live here so every generated artifact carries them.
+DATASET = {
+    "name": "BBC News full-text corpus",
+    "domain": "news (single domain, five sub-topics)",
+    "source": "UCD Machine Learning Group - http://mlg.ucd.ie/datasets/bbc.html",
+    "download": "http://mlg.ucd.ie/files/datasets/bbc-fulltext.zip",
+    "attribution": (
+        "D. Greene and P. Cunningham, 'Practical Solutions to the Problem of "
+        "Diagonal Dominance in Kernel Document Clustering', Proc. ICML 2006."
+    ),
+    "licence": (
+        "Article content copyright BBC; released for non-commercial research "
+        "use only."
+    ),
+    "categories": ("business", "entertainment", "politics", "sport", "tech"),
+}
+
 
 @dataclass(frozen=True)
 class Document:
@@ -58,6 +76,10 @@ def corpus_stats(docs: list[Document]) -> dict:
     types = {token for d in docs for token in d.text.split()}
 
     return {
+        "dataset": DATASET["name"],
+        "domain": DATASET["domain"],
+        "source": DATASET["source"],
+        "attribution": DATASET["attribution"],
         "num_docs": len(docs),
         "raw_bytes": sum(len(d.text.encode("utf-8")) for d in docs),
         "total_whitespace_tokens": sum(lengths),

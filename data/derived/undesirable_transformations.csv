@@ -1,0 +1,13 @@
+word_a,word_b,should_merge,stem_a,stem_b,same_stem,lemma_a,lemma_b,same_lemma,verdict,note
+communism,community,no,commun,commun,yes,communism,community,no,over-stemming: only the stemmer merges,political system vs social group
+university,universe,no,univers,univers,yes,university,universe,no,over-stemming: only the stemmer merges,institution vs cosmos
+generic,generation,no,gener,gener,yes,generic,generation,no,over-stemming: only the stemmer merges,unspecific vs a cohort of people
+dominance,dominic,no,domin,domin,yes,dominance,dominic,no,over-stemming: only the stemmer merges,abstract noun vs a personal name
+news,new,no,new,new,yes,news,new,no,over-stemming: only the stemmer merges,reports vs the adjective
+mice,mouse,yes,mice,mous,no,mouse,mouse,yes,under-stemming: only the lemmatizer merges,irregular plural
+ran,run,yes,ran,run,no,run,run,yes,under-stemming: only the lemmatizer merges,irregular past tense
+better,good,yes,better,good,no,better,good,no,under-stemming: neither merges,suppletive comparative
+was,be,yes,wa,be,no,be,be,yes,under-stemming: only the lemmatizer merges,irregular copula
+children,child,yes,children,child,no,child,child,yes,under-stemming: only the lemmatizer merges,irregular plural
+europe,european,yes,europ,european,no,europe,european,no,under-stemming: neither merges,place and its adjective
+analysis,analyses,yes,analysi,analys,no,analysis,analyse,no,under-stemming: neither merges,Greek-origin plural
