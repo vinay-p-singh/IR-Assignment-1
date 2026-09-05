@@ -61,6 +61,11 @@ python -m app.server                  # interactive chat UI at http://127.0.0.1:
 `demo.py` prints one section per assignment requirement and is the script to
 capture for the Virtual Lab screenshot.
 
+`IR_Assignment1_Group35.ipynb` is the executable notebook companion: open it,
+select the project `.venv` interpreter, and choose **Run All**. It calls the
+same `src/ir/` modules and writes its artefacts to `data/derived/notebook/` so
+it never overwrites the canonical experiment outputs.
+
 ## Layout
 
 | Path | Contents |
@@ -68,6 +73,7 @@ capture for the Virtual Lab screenshot.
 | `src/ir/` | The retrieval system — corpus, preprocess, porter, dictionary, index, boolean, tolerant, morphology, evaluate, queryset |
 | `experiments/run_experiments.py` | Runs every experiment, writes `data/derived/` and the report figures |
 | `demo.py` | Single-command demonstration |
+| `IR_Assignment1_Group35.ipynb` | Executable notebook walkthrough of the full pipeline |
 | `tests/` | 109 tests, including NLTK cross-checks for the Porter implementation |
 | `docs/report/` | Technical report and figures |
 | `data/derived/` | Generated results (CSV/JSON) — nothing here is hand-written |

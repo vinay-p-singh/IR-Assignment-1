@@ -1,0 +1,21 @@
+qid,corruption,misspelled_query,repaired_query,exact_results,tolerant_results,exact_recall,tolerant_recall,tolerant_precision
+m01,doubling,oill,oil,0,110,0.0,1.0,0.9909
+m02,omission,electon,election,0,237,0.0,0.9862,0.9072
+m03,omission,brodband,broadband,0,72,0.0,1.0,1.0
+m04,transposition,chelsae,chelsea,0,68,0.0,0.9855,1.0
+m05,substitution,oscer,oscar,0,68,0.0,0.7733,0.8529
+m06,omission,ecnomy,economy,0,200,0.0,0.9897,0.965
+m07,substitution,softwear,software,0,135,0.0,1.0,1.0
+m08,doubling,albbum,album,0,78,0.0,1.0,0.8718
+m09,transposition,oil AND pirce,oil AND piece,0,0,0.0,0.0,0.0
+m10,transposition,moblie AND phone,mobile AND phone,0,102,0.0,1.0,0.8137
+m11,substitution,futball OR rugby,football OR rugby,74,176,0.4111,0.95,0.9716
+m12,doubling,(oil OR gass) AND prices,(oil OR gas) AND prices,63,64,0.9821,1.0,0.875
+m13,omission,goverment AND economy,government AND economy,0,111,0.0,0.9455,0.9369
+m14,omission,(microsft OR apple) AND software,(microsoft OR apple) AND software,15,52,0.2778,0.963,1.0
+m15,transposition,sahres AND profits,sales AND profits,0,62,0.0,0.5135,0.3065
+m16,transposition,election AND labuor,election AND labor,0,4,0.0,0.0,0.0
+m17,transposition,digital AND musci,digital AND music,0,83,0.0,1.0,0.9759
+m18,doubling,internett AND security,internet AND security,0,34,0.0,1.0,0.7941
+m19,omission,film AND awrds,film AND awards,0,98,0.0,1.0,0.7551
+m20,omission,managment,management,343,343,0.98,0.98,1.0

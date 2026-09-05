@@ -1,3 +1,4 @@
 nltk>=3.9
 matplotlib>=3.9
 pytest>=8.0
+ipykernel>=6.29

@@ -1,0 +1,5 @@
+query,hits,naive_comparisons,optimized_comparisons,saving_pct,naive_ms,optimized_ms,naive_order,optimized_order
+oil AND price,63,290,290,0.0,0.1223,0.1315,oil(110) price(245),oil(110) price(245)
+bank AND NOT football,180,4299,293,93.2,1.7205,0.1741,bank(186) footbal(114),bank(186) footbal(114)
+(microsoft OR apple) AND software,52,301,301,0.0,0.1429,0.1584,microsoft(73) appl(47) softwar(135),microsoft(73) appl(47) softwar(135)
+market AND prices AND oil AND gas,1,815,634,22.2,0.3386,0.2723,market(433) price(245) oil(110) ga(35),ga(35) oil(110) price(245) market(433)

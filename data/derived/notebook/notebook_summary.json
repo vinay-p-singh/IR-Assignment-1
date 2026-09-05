@@ -1,0 +1,420 @@
+{
+  "corpus": {
+    "attribution": "D. Greene and P. Cunningham, 'Practical Solutions to the Problem of Diagonal Dominance in Kernel Document Clustering', Proc. ICML 2006.",
+    "dataset": "BBC News full-text corpus",
+    "doc_length": {
+      "max": 4432,
+      "mean": 384.04,
+      "median": 332,
+      "min": 89
+    },
+    "domain": "news (single domain, five sub-topics)",
+    "num_docs": 2225,
+    "raw_bytes": 5041385,
+    "source": "UCD Machine Learning Group - http://mlg.ucd.ie/datasets/bbc.html",
+    "total_whitespace_tokens": 854490,
+    "unique_whitespace_types": 65553
+  },
+  "dataset": {
+    "attribution": "D. Greene and P. Cunningham, 'Practical Solutions to the Problem of Diagonal Dominance in Kernel Document Clustering', Proc. ICML 2006.",
+    "categories": [
+      "business",
+      "entertainment",
+      "politics",
+      "sport",
+      "tech"
+    ],
+    "domain": "news (single domain, five sub-topics)",
+    "download": "http://mlg.ucd.ie/files/datasets/bbc-fulltext.zip",
+    "licence": "Article content copyright BBC; released for non-commercial research use only.",
+    "name": "BBC News full-text corpus",
+    "source": "UCD Machine Learning Group - http://mlg.ucd.ie/datasets/bbc.html"
+  },
+  "download": {
+    "content_type": "local directory",
+    "downloaded": false,
+    "status": "cached"
+  },
+  "evaluation": {
+    "lemmatized": {
+      "macro": {
+        "f1": 0.8834,
+        "precision": 0.914,
+        "recall": 0.9035
+      },
+      "micro": {
+        "f1": 0.865,
+        "precision": 0.919,
+        "recall": 0.817
+      },
+      "num_queries": 33
+    },
+    "normalized": {
+      "macro": {
+        "f1": 0.9104,
+        "precision": 1.0,
+        "recall": 0.8756
+      },
+      "micro": {
+        "f1": 0.8371,
+        "precision": 1.0,
+        "recall": 0.7199
+      },
+      "num_queries": 33
+    },
+    "nostop": {
+      "macro": {
+        "f1": 0.9104,
+        "precision": 1.0,
+        "recall": 0.8756
+      },
+      "micro": {
+        "f1": 0.8371,
+        "precision": 1.0,
+        "recall": 0.7199
+      },
+      "num_queries": 33
+    },
+    "raw": {
+      "macro": {
+        "f1": 0.6929,
+        "precision": 0.8482,
+        "recall": 0.6343
+      },
+      "micro": {
+        "f1": 0.7337,
+        "precision": 0.9993,
+        "recall": 0.5797
+      },
+      "num_queries": 33
+    },
+    "stemmed": {
+      "macro": {
+        "f1": 0.9178,
+        "precision": 0.9028,
+        "recall": 0.9554
+      },
+      "micro": {
+        "f1": 0.9156,
+        "precision": 0.9371,
+        "recall": 0.8952
+      },
+      "num_queries": 33
+    }
+  },
+  "evaluation_by_kind": [
+    {
+      "f1": 0.9073,
+      "index": "lemmatized",
+      "kind": "boolean",
+      "precision": 0.8679,
+      "queries": 15,
+      "recall": 0.9759
+    },
+    {
+      "f1": 0.7291,
+      "index": "lemmatized",
+      "kind": "morphological",
+      "precision": 0.9725,
+      "queries": 7,
+      "recall": 0.6556
+    },
+    {
+      "f1": 0.9202,
+      "index": "lemmatized",
+      "kind": "negation",
+      "precision": 0.895,
+      "queries": 3,
+      "recall": 0.9554
+    },
+    {
+      "f1": 0.9599,
+      "index": "lemmatized",
+      "kind": "simple",
+      "precision": 0.9563,
+      "queries": 8,
+      "recall": 0.9652
+    },
+    {
+      "f1": 0.9873,
+      "index": "normalized",
+      "kind": "boolean",
+      "precision": 1.0,
+      "queries": 15,
+      "recall": 0.9759
+    },
+    {
+      "f1": 0.6319,
+      "index": "normalized",
+      "kind": "morphological",
+      "precision": 1.0,
+      "queries": 7,
+      "recall": 0.5137
+    },
+    {
+      "f1": 0.9933,
+      "index": "normalized",
+      "kind": "negation",
+      "precision": 1.0,
+      "queries": 3,
+      "recall": 0.9867
+    },
+    {
+      "f1": 0.9789,
+      "index": "normalized",
+      "kind": "simple",
+      "precision": 1.0,
+      "queries": 8,
+      "recall": 0.9624
+    },
+    {
+      "f1": 0.9873,
+      "index": "nostop",
+      "kind": "boolean",
+      "precision": 1.0,
+      "queries": 15,
+      "recall": 0.9759
+    },
+    {
+      "f1": 0.6319,
+      "index": "nostop",
+      "kind": "morphological",
+      "precision": 1.0,
+      "queries": 7,
+      "recall": 0.5137
+    },
+    {
+      "f1": 0.9933,
+      "index": "nostop",
+      "kind": "negation",
+      "precision": 1.0,
+      "queries": 3,
+      "recall": 0.9867
+    },
+    {
+      "f1": 0.9789,
+      "index": "nostop",
+      "kind": "simple",
+      "precision": 1.0,
+      "queries": 8,
+      "recall": 0.9624
+    },
+    {
+      "f1": 0.6767,
+      "index": "raw",
+      "kind": "boolean",
+      "precision": 0.8,
+      "queries": 15,
+      "recall": 0.6304
+    },
+    {
+      "f1": 0.6222,
+      "index": "raw",
+      "kind": "morphological",
+      "precision": 1.0,
+      "queries": 7,
+      "recall": 0.5009
+    },
+    {
+      "f1": 0.8138,
+      "index": "raw",
+      "kind": "negation",
+      "precision": 0.9966,
+      "queries": 3,
+      "recall": 0.71
+    },
+    {
+      "f1": 0.7398,
+      "index": "raw",
+      "kind": "simple",
+      "precision": 0.75,
+      "queries": 8,
+      "recall": 0.73
+    },
+    {
+      "f1": 0.8909,
+      "index": "stemmed",
+      "kind": "boolean",
+      "precision": 0.8414,
+      "queries": 15,
+      "recall": 0.9759
+    },
+    {
+      "f1": 0.9379,
+      "index": "stemmed",
+      "kind": "morphological",
+      "precision": 1.0,
+      "queries": 7,
+      "recall": 0.8993
+    },
+    {
+      "f1": 0.9017,
+      "index": "stemmed",
+      "kind": "negation",
+      "precision": 0.8609,
+      "queries": 3,
+      "recall": 0.953
+    },
+    {
+      "f1": 0.9566,
+      "index": "stemmed",
+      "kind": "simple",
+      "precision": 0.9485,
+      "queries": 8,
+      "recall": 0.9669
+    }
+  ],
+  "indexes": [
+    {
+      "hapax_legomena": 14699,
+      "index": "raw",
+      "mean_df": 12.404,
+      "num_docs": 2225,
+      "total_postings": 474642,
+      "total_tokens": 854987,
+      "vocabulary_size": 38266
+    },
+    {
+      "hapax_legomena": 12703,
+      "index": "normalized",
+      "mean_df": 13.463,
+      "num_docs": 2225,
+      "total_postings": 457500,
+      "total_tokens": 854987,
+      "vocabulary_size": 33981
+    },
+    {
+      "hapax_legomena": 12697,
+      "index": "nostop",
+      "mean_df": 10.542,
+      "num_docs": 2225,
+      "total_postings": 356386,
+      "total_tokens": 497333,
+      "vocabulary_size": 33805
+    },
+    {
+      "hapax_legomena": 9505,
+      "index": "stemmed",
+      "mean_df": 13.383,
+      "num_docs": 2225,
+      "total_postings": 335223,
+      "total_tokens": 497333,
+      "vocabulary_size": 25049
+    },
+    {
+      "hapax_legomena": 11282,
+      "index": "lemmatized",
+      "mean_df": 11.722,
+      "num_docs": 2225,
+      "total_postings": 337183,
+      "total_tokens": 497275,
+      "vocabulary_size": 28764
+    }
+  ],
+  "optimization_samples": [
+    {
+      "hits": 63,
+      "naive_comparisons": 290,
+      "naive_ms": 0.1223,
+      "naive_order": "oil(110) price(245)",
+      "optimized_comparisons": 290,
+      "optimized_ms": 0.1315,
+      "optimized_order": "oil(110) price(245)",
+      "query": "oil AND price",
+      "saving_pct": 0.0
+    },
+    {
+      "hits": 180,
+      "naive_comparisons": 4299,
+      "naive_ms": 1.7205,
+      "naive_order": "bank(186) footbal(114)",
+      "optimized_comparisons": 293,
+      "optimized_ms": 0.1741,
+      "optimized_order": "bank(186) footbal(114)",
+      "query": "bank AND NOT football",
+      "saving_pct": 93.2
+    },
+    {
+      "hits": 52,
+      "naive_comparisons": 301,
+      "naive_ms": 0.1429,
+      "naive_order": "microsoft(73) appl(47) softwar(135)",
+      "optimized_comparisons": 301,
+      "optimized_ms": 0.1584,
+      "optimized_order": "microsoft(73) appl(47) softwar(135)",
+      "query": "(microsoft OR apple) AND software",
+      "saving_pct": 0.0
+    },
+    {
+      "hits": 1,
+      "naive_comparisons": 815,
+      "naive_ms": 0.3386,
+      "naive_order": "market(433) price(245) oil(110) ga(35)",
+      "optimized_comparisons": 634,
+      "optimized_ms": 0.2723,
+      "optimized_order": "ga(35) oil(110) price(245) market(433)",
+      "query": "market AND prices AND oil AND gas",
+      "saving_pct": 22.2
+    }
+  ],
+  "tolerant": {
+    "exact": {
+      "macro": {
+        "f1": 0.1466,
+        "precision": 0.1937,
+        "recall": 0.1326
+      },
+      "micro": {
+        "f1": 0.3662,
+        "precision": 0.9838,
+        "recall": 0.2249
+      },
+      "num_queries": 20
+    },
+    "tolerant": {
+      "macro": {
+        "f1": 0.8237,
+        "precision": 0.8008,
+        "recall": 0.8543
+      },
+      "micro": {
+        "f1": 0.9047,
+        "precision": 0.9194,
+        "recall": 0.8905
+      },
+      "num_queries": 20
+    }
+  },
+  "wildcards": [
+    {
+      "matching_terms": 3,
+      "pattern": "re*val",
+      "sample": "removal retrieval revival"
+    },
+    {
+      "matching_terms": 13,
+      "pattern": "comput*",
+      "sample": "computational computer computer's computer-augmented computer-based computer-controlled computer-generated computer-implemented computeractive computerandvideogames computerised computers"
+    },
+    {
+      "matching_terms": 15,
+      "pattern": "*ology",
+      "sample": "apology bio-technology biology chronology ecology futurology ideology methodology musicology mythology nano-technology nanotechnology"
+    },
+    {
+      "matching_terms": 18,
+      "pattern": "invest*",
+      "sample": "invest investec invested investigate investigated investigates investigating investigation investigations investigative investigators investing"
+    },
+    {
+      "matching_terms": 1,
+      "pattern": "gov*ment",
+      "sample": "government"
+    },
+    {
+      "matching_terms": 1,
+      "pattern": "f*ball",
+      "sample": "football"
+    }
+  ]
+}
